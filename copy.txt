@@ -1,0 +1,16 @@
+let currentpage;
+
+        const allchild = list.querySelectorAll("li")
+
+        allchild.forEach((item) => {
+            item.addEventListener("click", () => {
+                currentpage = item.className
+                console.log(currentpage)
+            })
+        })
+
+        const detailbtn = document.querySelector("#back")
+
+        detailbtn.addEventListener("click", () => {
+            window.location.href = `auhm-detail.html#` + currentpage
+        })

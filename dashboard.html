@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUHM</title>
+  <style>
+    :root {
+      --bg: #070a12;
+      --sf: #0b101c;
+      --ln: rgba(255, 255, 255, .08);
+      --tx: #eef1f8;
+      --mu: #7d879f;
+      --ac: #9bbcff;
+      --ok: #6fd6a8;
+      --low: #e6b765;
+      --high: #ee8080;
+      --f: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0
+    }
+
+    body {
+      background: radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10), transparent 70%), var(--bg);
+      color: var(--tx);
+      font-family: var(--f);
+      letter-spacing: -.005em;
+      -webkit-font-smoothing: antialiased
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 26px 32px 72px
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px
+    }
+
+    .mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: .95rem;
+      letter-spacing: .02em
+    }
+
+    .meta-h {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--mu);
+      font-size: .82rem
+    }
+
+    .on {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .on i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ok)
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 56px;
+      margin-top: 56px
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-self: start;
+      position: sticky;
+      top: 24px
+    }
+
+    nav .back {
+      color: var(--mu);
+      font-size: .8rem;
+      text-decoration: none;
+      margin-bottom: 26px
+    }
+
+    nav .back:hover {
+      color: var(--tx)
+    }
+
+    nav a.i {
+      display: flex;
+      gap: 14px;
+      padding: 8px 0;
+      color: var(--mu);
+      text-decoration: none;
+      font-size: .92rem;
+      transition: color .2s
+    }
+
+    nav a.i span {
+      font-size: .72rem;
+      width: 18px;
+      padding-top: 2px;
+      font-variant-numeric: tabular-nums;
+      opacity: .6
+    }
+
+    nav a.i:hover {
+      color: var(--tx)
+    }
+
+    nav a[aria-current=page] {
+      color: var(--tx)
+    }
+
+    nav a[aria-current=page] span {
+      color: var(--ac);
+      opacity: 1
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--ac);
+      outline-offset: 3px;
+      border-radius: 4px
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+      gap: 64px;
+      align-items: start
+    }
+
+    .eb {
+      font-size: .74rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--mu)
+    }
+
+    .v {
+      font-size: clamp(4.2rem, 8.5vw, 7rem);
+      font-weight: 200;
+      line-height: 1;
+      letter-spacing: -.045em;
+      margin-top: 18px;
+      font-variant-numeric: tabular-nums
+    }
+
+    .u {
+      font-size: 1.05rem;
+      font-weight: 400;
+      letter-spacing: 0;
+      color: var(--mu);
+      margin-left: 10px
+    }
+
+    .st {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--c);
+      font-size: .95rem
+    }
+
+    .st i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--c)
+    }
+
+    .st span {
+      color: var(--mu);
+      margin-left: 6px
+    }
+
+    .ok {
+      --c: var(--ok)
+    }
+
+    .low {
+      --c: var(--low)
+    }
+
+    .high {
+      --c: var(--high)
+    }
+
+    .rb {
+      position: relative;
+      height: 2px;
+      background: var(--ln);
+      margin: 44px 0 12px
+    }
+
+    .band {
+      position: absolute;
+      top: -1px;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(155, 188, 255, .38)
+    }
+
+    .mk {
+      position: absolute;
+      top: -6px;
+      width: 2px;
+      height: 14px;
+      background: var(--tx);
+      border-radius: 1px;
+      transition: left .6s
+    }
+
+    .rl {
+      display: flex;
+      justify-content: space-between;
+      font-size: .74rem;
+      color: var(--mu)
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+      padding-top: 20px;
+      border-top: 1px solid var(--ln)
+    }
+
+    .meta small,
+    .stats small,
+    .cell small {
+      display: block;
+      color: var(--mu);
+      font-size: .76rem;
+      margin-bottom: 6px
+    }
+
+    .meta b,
+    .stats b {
+      font-weight: 500;
+      font-size: .98rem
+    }
+
+    .panel {
+      background: var(--sf);
+      border: 1px solid var(--ln);
+      border-radius: 22px;
+      padding: 24px 26px 22px
+    }
+
+    .ph {
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .seg {
+      display: inline-flex;
+      border: 1px solid var(--ln);
+      border-radius: 999px;
+      padding: 3px
+    }
+
+    .seg button {
+      background: none;
+      border: 0;
+      color: var(--mu);
+      font: inherit;
+      font-size: .76rem;
+      padding: 5px 13px;
+      border-radius: 999px;
+      cursor: pointer
+    }
+
+    .seg button[aria-pressed=true] {
+      background: rgba(255, 255, 255, .09);
+      color: var(--tx)
+    }
+
+    .chart {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-top: 14px;
+      touch-action: pan-y
+    }
+
+    .chart text {
+      fill: var(--mu);
+      font-size: 10.5px
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--ln)
+    }
+
+    .sec {
+      margin-top: 72px
+    }
+
+    .sec>.eb {
+      margin-bottom: 26px
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 34px
+    }
+
+    .bar .t {
+      display: flex;
+      justify-content: space-between;
+      font-size: .85rem;
+      margin-bottom: 10px
+    }
+
+    .bar .t span {
+      color: var(--mu)
+    }
+
+    .bar .tr {
+      height: 3px;
+      background: var(--ln);
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    .bar .fl {
+      height: 100%;
+      background: var(--ac);
+      border-radius: 2px;
+      transition: width .6s
+    }
+
+    .grid6 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--ln)
+    }
+
+    .cell {
+      padding: 22px 24px 22px 0;
+      border-bottom: 1px solid var(--ln)
+    }
+
+    .cell b {
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: -.02em;
+      font-variant-numeric: tabular-nums
+    }
+
+    .cell b em {
+      font-style: normal;
+      font-size: .85rem;
+      color: var(--mu);
+      margin-left: 6px;
+      font-weight: 400;
+      letter-spacing: 0
+    }
+
+    .cell p {
+      font-size: .78rem;
+      color: var(--mu);
+      margin-top: 6px
+    }
+
+    .cell.hl b {
+      color: var(--ac)
+    }
+
+    .note {
+      font-size: .74rem;
+      color: var(--mu);
+      margin-top: 16px;
+      opacity: .8
+    }
+
+    .recs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 36px 48px
+    }
+
+    .rec {
+      border-top: 1px solid var(--ln);
+      padding-top: 18px
+    }
+
+    .rec span {
+      font-size: .72rem;
+      color: var(--ac);
+      font-variant-numeric: tabular-nums
+    }
+
+    .rec h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      margin: 10px 0 8px
+    }
+
+    .rec p {
+      font-size: .88rem;
+      line-height: 1.6;
+      color: var(--mu)
+    }
+
+    @media (max-width:1000px) {
+      .shell {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        margin-top: 32px
+      }
+
+      nav {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 22px;
+        position: static;
+        align-items: center
+      }
+
+      nav .back {
+        margin: 0 8px 0 0;
+        white-space: nowrap
+      }
+
+      nav a.i {
+        white-space: nowrap
+      }
+
+      nav a.i span {
+        display: none
+      }
+
+      .top {
+        grid-template-columns: 1fr;
+        gap: 40px
+      }
+    }
+
+    @media (max-width:640px) {
+      .app {
+        padding: 18px 18px 56px
+      }
+
+      .meta-h .d {
+        display: none
+      }
+
+      .grid6 {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .bars {
+        grid-template-columns: 1fr;
+        gap: 24px
+      }
+
+      .cell b {
+        font-size: 1.5rem
+      }
+
+      .sec {
+        margin-top: 56px
+      }
+
+      .panel {
+        padding: 18px
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      * {
+        transition: none !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="mark"><svg width="24" height="24" viewBox="0 0 72 72" fill="none" stroke="#9bbcff" stroke-width="5"
+          aria-hidden="true">
+          <circle cx="36" cy="36" r="14" />
+          <ellipse cx="36" cy="38" rx="32" ry="10" transform="rotate(-25 36 38)" />
+        </svg>AUHM</div>
+      <div class="meta-h"><span id="day"></span><span class="d" id="clock"></span><span class="on"><i></i>Online</span>
+      </div>
+    </header>
+    <div class="shell">
+      <nav id="nav" aria-label="Parameters"></nav>
+      <main>
+        <div class="top">
+          <section id="now" aria-live="polite"></section>
+          <section class="panel">
+            <div class="ph"><span class="eb">History</span>
+              <div class="seg" id="range" role="group" aria-label="Time range"></div>
+            </div>
+            <svg class="chart" id="chart" viewBox="0 0 640 280" role="img"></svg>
+            <div class="stats" id="stats"></div>
+          </section>
+        </div>
+        <section class="sec" id="rad" hidden></section>
+        <section class="sec">
+          <div class="eb" id="rTitle"></div>
+          <div class="recs" id="recs" style="margin-top:26px"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script>
+    const $ = id => document.getElementById(id);
+    /* ===== EDIT HERE: one object per parameter. The whole page renders from this. ===== */
+    const P = {
+      hr: {
+        name: "Heart Rate", tag: "Keep your rhythm steady", unit: "bpm", dec: 0, base: 70, amp: 8, lo: 60, hi: 100, min: 40, max: 140, step: 20, range: "60 – 100 bpm", recs: [
+          ["calm", "Practise Calm Breathing", "Slow, deep breaths help bring a raised heart rate back to baseline."],
+          ["run", "Exercise Regularly", "Short daily cardio sessions keep the heart strong in microgravity."],
+          ["water", "Stay Hydrated", "Dehydration makes the heart work harder. Drink at set intervals."],
+          ["sleep", "Protect Your Sleep", "Aim for 7–8 hours so your resting heart rate can recover."],
+          ["meal", "Limit Stimulants", "Keep caffeine low, especially in the hours before sleep."],
+          ["report", "Report Irregular Rhythm", "Tell the medical team about palpitations, dizziness or chest discomfort."]]
+      },
+      bp: {
+        name: "Blood Pressure", tag: "Keep the pressure in balance", unit: "mmHg", dec: 0, base: 116, amp: 6, lo: 90, hi: 130, min: 60, max: 160, step: 20, range: "90 – 130 mmHg (systolic)", fmt: v => Math.round(v) + "/" + Math.round(v * .66), recs: [
+          ["meal", "Watch Your Sodium", "Choose low-sodium meals; salt raises pressure and fluid retention."],
+          ["water", "Stay Hydrated", "Steady fluid intake supports healthy blood volume."],
+          ["run", "Exercise Regularly", "Resistance and cardio sessions help counter fluid shifts in space."],
+          ["calm", "Manage Stress", "Short relaxation breaks through the day keep pressure steady."],
+          ["sleep", "Get Adequate Sleep", "Poor sleep is linked to higher blood pressure."],
+          ["report", "Report Sudden Changes", "Inform the medical team about headaches, blurred vision or dizziness."]]
+      },
+      bs: {
+        name: "Blood Sugar", tag: "Keep your energy in balance", unit: "mg/dL", dec: 0, base: 102, amp: 14, lo: 70, hi: 140, min: 0, max: 250, step: 50, range: "70 – 140 mg/dL", recs: [
+          ["meal", "Follow Meal Schedule", "Maintain a consistent meal timing to keep blood sugar levels stable."],
+          ["water", "Stay Hydrated", "Drink enough water to support metabolism and overall health in microgravity."],
+          ["run", "Exercise Regularly", "Daily physical activity helps regulate blood sugar and improves insulin sensitivity."],
+          ["bowl", "Monitor Carbohydrate Intake", "Choose complex carbohydrates and balanced meals to avoid sudden spikes."],
+          ["sleep", "Get Adequate Sleep", "Aim for 7–8 hours of quality sleep to support hormone balance and glucose control."],
+          ["report", "Report Sudden Changes", "Inform the medical team if you notice unusually high or low blood sugar levels."]]
+      },
+      bt: {
+        name: "Body Temperature", tag: "Stay in your comfort zone", unit: "°C", dec: 1, base: 36.7, amp: .3, lo: 36.1, hi: 37.5, min: 35, max: 39, step: 1, range: "36.1 – 37.5 °C", recs: [
+          ["water", "Stay Hydrated", "Fluids help the body regulate heat when cooling is limited."],
+          ["temp", "Check Suit Cooling", "Adjust cooling settings so you stay comfortable during activity."],
+          ["meal", "Eat Regularly", "Steady meals support a stable core temperature."],
+          ["sleep", "Rest Well", "Sleep in a cool, ventilated area of the module."],
+          ["run", "Cool Down After Exercise", "Allow time to cool down to avoid overheating."],
+          ["report", "Report Fever or Chills", "Inform the medical team if your temperature leaves the normal range."]]
+      },
+      sh: {
+        name: "Daily Sleep Hours", tag: "Rest to perform at your best", unit: "hrs", dec: 1, base: 7.3, amp: .8, lo: 7, hi: 9, min: 0, max: 12, step: 3, range: "7 – 9 hrs", daily: 1, recs: [
+          ["sleep", "Keep a Fixed Schedule", "Go to bed and wake up at the same time to stay in sync with mission time."],
+          ["calm", "Wind Down Early", "Dim lights and avoid screens for 30 minutes before sleep."],
+          ["meal", "Mind Late Meals", "Avoid heavy meals and caffeine close to bedtime."],
+          ["run", "Exercise Earlier", "Finish hard workouts a few hours before sleep."],
+          ["temp", "Cool, Dark Sleep Area", "Use an eye mask and keep the sleep station comfortably cool."],
+          ["report", "Report Poor Sleep", "Tell the medical team if you sleep under 6 hours for several days."]]
+      },
+      sq: {
+        name: "Sleep Quality", tag: "Wake up recovered", unit: "%", dec: 0, base: 82, amp: 8, lo: 70, hi: 100, min: 0, max: 100, step: 25, range: "70 – 100 %", daily: 1, recs: [
+          ["sleep", "Consistent Bedtime", "A regular routine improves deep and REM sleep."],
+          ["calm", "Relax Before Bed", "Try breathing exercises or light stretching."],
+          ["water", "Limit Evening Fluids", "Fewer night-time interruptions mean more restful sleep."],
+          ["run", "Stay Active by Day", "Daily movement helps you fall asleep faster."],
+          ["heart", "Check Your Heart Rate", "A calm resting heart rate often goes with better sleep."],
+          ["report", "Report Restless Nights", "Inform the medical team if poor quality continues."]]
+      },
+      st: {
+        name: "Stress Level", tag: "Stay calm and focused", unit: "/ 10", dec: 1, base: 3.2, amp: 1.4, lo: 0, hi: 6, min: 0, max: 10, step: 2, range: "0 – 6 / 10", recs: [
+          ["calm", "Breathe and Reset", "Take a few slow breaths between tasks to lower tension."],
+          ["run", "Move Your Body", "Exercise releases tension and lifts your mood."],
+          ["heart", "Stay Connected", "Schedule regular calls with family and friends."],
+          ["sleep", "Protect Your Rest", "Good sleep makes it easier to handle pressure."],
+          ["bowl", "Eat Well", "Balanced meals support steady energy and mood."],
+          ["report", "Ask for Support", "Talk to the flight surgeon or psychologist if stress stays high."]]
+      }
+    };
+
+    Object.assign(P, {
+      rad: {
+        name: "Radiation", tag: "Dose rate, measured continuously", unit: "µSv/h", dec: 1, base: 26, amp: 6, lo: 0, hi: 41.7, min: 0, max: 60, step: 15, range: "below 41.7 µSv/h",
+        rad: { pel: 600, acc: 128.4, dlim: 1 }, recs: [
+          [0, "Know Your Storm Shelter", "During a solar particle event, move to the shielded area straight away."],
+          [0, "Limit Time in High-Dose Areas", "Plan work in lightly shielded modules for the shortest time needed."],
+          [0, "Wear Your Dosimeter", "Keep it on you at all times so your personal dose stays accurate."],
+          [0, "Sleep in the Best-Shielded Spot", "Water and supply stowage around the sleep station reduce your dose."],
+          [0, "Plan EVAs Around Space Weather", "Check the forecast and avoid spacewalks during elevated activity."],
+          [0, "Report Dosimeter Alerts", "Tell mission control at once if a sensor shows an unexpected spike."]]
+      },
+      ox: {
+        name: "Oxygen Level", tag: "Blood oxygen saturation", unit: "%", dec: 0, base: 97, amp: 1.2, lo: 95, hi: 100, min: 90, max: 100, step: 2, range: "95 – 100 %", recs: [
+          [0, "Check Cabin Air", "Confirm oxygen and CO₂ readings are within the normal range."],
+          [0, "Breathe Deeply", "Slow, full breaths improve oxygen uptake after exercise."],
+          [0, "Warm Up Before Activity", "Build effort gradually so oxygen demand rises smoothly."],
+          [0, "Report Breathlessness", "Tell the medical team about shortness of breath or dizziness."]]
+      },
+      act: {
+        name: "Activity", tag: "Minutes of exercise per day", unit: "min", dec: 0, base: 105, amp: 25, lo: 90, hi: 180, min: 0, max: 240, step: 60, range: "90 – 180 min per day", daily: 1, recs: [
+          [0, "Train Every Day", "Resistance and cardio sessions protect bone and muscle in microgravity."],
+          [0, "Split Your Sessions", "Two shorter blocks are easier to keep consistent than one long one."],
+          [0, "Warm Up and Cool Down", "Five minutes each side reduces strain and speeds recovery."],
+          [0, "Report Pain or Strain", "Tell the medical team about joint or muscle pain that does not settle."]]
+      }
+    });
+    /* ===== end of data ===== */
+    const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
+    const RANGES = [["24H", 24], ["12H", 12], ["6H", 6]];
+    const MISSION_START = Date.UTC(2026, 6, 8);
+    const rng = s => { let a = 0; for (const c of s) a = Math.imul(a ^ c.charCodeAt(0), 16777619); return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } };
+    const S = { key: "bs", hours: 24, series: [], cur: 0, prev: 0, at: new Date(), fresh: false, g: null };
+    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    const fv = v => { const p = P[S.key]; return p.fmt ? p.fmt(v) : v.toFixed(p.dec) };
+    const hhmm = d => d.toISOString().slice(11, 16);
+    const pct = (v, p) => clamp((v - p.min) / (p.max - p.min), 0, 1) * 100;
+    function mk(key, hours) {
+      const p = P[key], n = p.daily ? 7 : 25, r = rng(key + (p.daily ? 7 : hours)), ph = r() * 6, f = p.daily ? 2 : hours === 6 ? .6 : hours === 12 ? 1.1 : 1.8;
+      return Array.from({ length: n }, (_, i) => clamp(p.base + p.amp * (Math.sin(i / n * 6.28 * f + ph) * .7 + (r() - .5) * .5), p.min, p.max));
+    }
+    function build() {
+      S.series = mk(S.key, S.hours); const n = S.series.length;
+      if (!S.fresh) { S.cur = S.series[n - 1]; S.prev = S.series[n - 2] }
+      S.series[n - 1] = S.cur;
+    }
+    function status(v) { const p = P[S.key]; return v < p.lo ? ["Low", "low"] : v > p.hi ? ["High", "high"] : ["Normal", "ok"] }
+    function renderNow() {
+      const p = P[S.key], [st, cl] = status(S.cur), d = S.cur - S.prev, steady = Math.abs(d) <= p.amp * .12;
+      $("now").innerHTML = `<div class="eb">${p.name}</div>
+  <div class="v">${fv(S.cur)}<span class="u">${p.unit}</span></div>
+  <div class="st ${cl}"><i></i>${st}<span>${p.tag}</span></div>
+  <div class="rb"><div class="band" style="left:${pct(p.lo, p)}%;width:${pct(p.hi, p) - pct(p.lo, p)}%"></div><div class="mk" style="left:calc(${pct(S.cur, p)}% - 1px)"></div></div>
+  <div class="rl"><span>${p.min}</span><span>Normal ${p.range}</span><span>${p.max}</span></div>
+  <div class="meta"><div><small>Last reading</small><b>${hhmm(S.at)} UTC</b></div>
+  <div><small>Change</small><b>${steady ? "±" : d > 0 ? "+" : "−"}${Math.abs(d).toFixed(p.dec)} ${p.unit}</b></div>
+  <div><small>Trend</small><b>${steady ? "Stable" : d > 0 ? "Rising" : "Falling"}</b></div></div>`;
+    }
+    function renderChart() {
+      const p = P[S.key], n = S.series.length, W = 640, H = 280, L = 40, Rr = 12, T = 14, B = 26;
+      const x = i => L + i * (W - L - Rr) / (n - 1), y = v => T + (H - T - B) * (1 - (clamp(v, p.min, p.max) - p.min) / (p.max - p.min));
+      S.g = { x, y, n, W, L, Rr, T, H, B };
+      let g = "";
+      for (let v = p.min; v <= p.max + 1e-9; v += p.step)g += `<line x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(255,255,255,.05)"/><text x="${L - 10}" y="${y(v) + 3.5}" text-anchor="end">${+v.toFixed(1)}</text>`;
+      const pts = S.series.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+      const now = Date.now(); let xl = "";
+      if (p.daily) for (let i = 0; i < n; i++)xl += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${i == n - 1 ? "Today" : new Date(now - (n - 1 - i) * 864e5).toUTCString().slice(0, 3)}</text>`;
+      else for (let i = 0; i <= 24; i += 6)xl += `<text x="${x(i)}" y="${H - 6}" text-anchor="${i ? i == 24 ? "end" : "middle" : "start"}">${hhmm(new Date(now - S.hours * 36e5 * (1 - i / 24)))}</text>`;
+      const lim = p.hi < p.max ? `<line x1="${L}" x2="${W - Rr}" y1="${y(p.hi)}" y2="${y(p.hi)}" stroke="var(--high)" stroke-opacity=".55" stroke-dasharray="3 5"/><text x="${W - Rr}" y="${y(p.hi) - 6}" text-anchor="end" style="fill:var(--high);fill-opacity:.8">limit</text>` : "";
+      const lx = x(n - 1), ly = y(S.cur);
+      $("chart").setAttribute("aria-label", `${p.name} history`);
+      $("chart").innerHTML = `<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9bbcff" stop-opacity=".22"/><stop offset="1" stop-color="#9bbcff" stop-opacity="0"/></linearGradient></defs>
+  <rect x="${L}" y="${y(Math.min(p.hi, p.max))}" width="${W - L - Rr}" height="${Math.max(0, y(Math.max(p.lo, p.min)) - y(Math.min(p.hi, p.max)))}" fill="rgba(155,188,255,.05)"/>${g}${lim}
+  <polygon points="${x(0)},${H - B} ${pts} ${lx},${H - B}" fill="url(#ag)"/><polyline points="${pts}" fill="none" stroke="#9bbcff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="${lx}" cy="${ly}" r="7" fill="#9bbcff" fill-opacity=".18"/><circle cx="${lx}" cy="${ly}" r="3" fill="#fff"/>${xl}<g id="hv"></g>`;
+      const avg = S.series.reduce((a, b) => a + b, 0) / n, mx = Math.max(...S.series), mn = Math.min(...S.series);
+      $("stats").innerHTML = [["Average", avg], ["Maximum", mx], ["Minimum", mn]].map(a => `<div><small>${a[0]}</small><b>${fv(a[1])} ${p.unit}</b></div>`).join("");
+    }
+    function hover(e) {
+      const g = S.g; if (!g) return; const p = P[S.key], r = $("chart").getBoundingClientRect();
+      const vx = (e.clientX - r.left) / r.width * g.W, i = clamp(Math.round((vx - g.L) / ((g.W - g.L - g.Rr) / (g.n - 1))), 0, g.n - 1), v = S.series[i], cx = g.x(i), now = Date.now();
+      const lab = p.daily ? (i == g.n - 1 ? "Today" : new Date(now - (g.n - 1 - i) * 864e5).toUTCString().slice(0, 3)) : hhmm(new Date(now - S.hours * 36e5 * (1 - i / (g.n - 1)))) + " UTC";
+      $("hv").innerHTML = `<line x1="${cx}" x2="${cx}" y1="${g.T}" y2="${g.H - g.B}" stroke="rgba(255,255,255,.25)"/><circle cx="${cx}" cy="${g.y(v)}" r="4" fill="#fff"/><text x="${cx > g.W / 2 ? cx - 10 : cx + 10}" y="${g.T + 10}" text-anchor="${cx > g.W / 2 ? "end" : "start"}" style="fill:#eef1f8;font-size:11.5px">${fv(v)} ${p.unit} · ${lab}</text>`;
+    }
+    function renderRad() {
+      const p = P[S.key], el = $("rad");
+      if (!p.rad) { el.hidden = true; return }
+      const { pel, acc, dlim } = p.rad, day = mk(S.key, 24); day[day.length - 1] = S.cur;
+      const d = day.reduce((a, b) => a + b, 0) / day.length * 24 / 1000, rem = pel - acc, days = d > 0 ? rem / d : Infinity;
+      const cell = (l, v, u, s, h) => `<div class="cell${h ? " hl" : ""}"><small>${l}</small><b>${v}<em>${u}</em></b><p>${s}</p></div>`;
+      el.hidden = false;
+      el.innerHTML = `<div class="eb">Radiation budget</div>
+  <div class="bars"><div class="bar"><div class="t">Career exposure<span>${(acc / pel * 100).toFixed(1)}% of PEL</span></div><div class="tr"><div class="fl" style="width:${clamp(acc / pel * 100, 0, 100)}%"></div></div></div>
+  <div class="bar"><div class="t">Absorbed today<span>${(d / dlim * 100).toFixed(0)}% of daily limit</span></div><div class="tr"><div class="fl" style="width:${clamp(d / dlim * 100, 0, 100)}%"></div></div></div></div>
+  <div class="grid6">${cell("Permissible exposure limit (PEL)", pel, "mSv", "Career limit")}${cell("Accumulated radiation", acc.toFixed(1), "mSv", "Total dose to date")}${cell("Daily limit", dlim.toFixed(2), "mSv / day", "Planning limit")}
+  ${cell("Absorbed in last 24 h", d.toFixed(2), "mSv", "Daily accumulation")}${cell("Remaining limit", rem.toFixed(1), "mSv", "PEL minus accumulated")}${cell("Time to reach PEL", isFinite(days) ? Math.floor(days).toLocaleString() : "–", "days", isFinite(days) ? `About ${(days / 365).toFixed(1)} years at the current rate` : "No dose recorded", 1)}</div>
+  <p class="note">Demo values. PEL follows the 600 mSv career limit; edit the numbers in the data block at the top of the script.</p>`;
+    }
+    function renderRecs() {
+      const p = P[S.key]; $("rTitle").textContent = p.name + " recommendations";
+      $("recs").innerHTML = p.recs.map((r, i) => `<div class="rec"><span>${String(i + 1).padStart(2, "0")}</span><h3>${r[1]}</h3><p>${r[2]}</p></div>`).join("");
+    }
+    function renderNav() {
+      $("nav").innerHTML = `<a class="back" href="index.html">← Dashboard</a>` + ORDER.map((k, i) => `<a class="i" href="#${k}"${k === S.key ? ' aria-current="page"' : ""}><span>${String(i + 1).padStart(2, "0")}</span>${P[k].name}</a>`).join("");
+    }
+    function setRange() {
+      const p = P[S.key];
+      $("range").innerHTML = p.daily ? '<button aria-pressed="true">7D</button>' : RANGES.map(r => `<button data-h="${r[1]}" aria-pressed="${r[1] === S.hours}">${r[0]}</button>`).join("");
+    }
+    function load() {
+      const h = location.hash.slice(1); S.key = P[h] ? h : "bs"; S.fresh = false; S.at = new Date();
+      document.title = `Orbital Care · ${P[S.key].name}`;
+      setRange(); build(); S.fresh = true; renderNav(); renderNow(); renderChart(); renderRad(); renderRecs();
+    }
+    $("range").addEventListener("click", e => { const h = e.target.dataset.h; if (!h) return; S.hours = +h; build(); setRange(); renderChart() });
+    $("chart").addEventListener("pointermove", hover);
+    $("chart").addEventListener("pointerleave", () => { const h = $("hv"); if (h) h.innerHTML = "" });
+    addEventListener("hashchange", load);
+    function clock() {
+      const d = new Date(); $("day").textContent = "Mission Day " + (Math.floor((d - MISSION_START) / 864e5) + 1);
+      $("clock").textContent = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }) + " · " + hhmm(d) + " UTC"
+    }
+    setInterval(clock, 1000); clock();
+    setInterval(() => { const p = P[S.key]; S.prev = S.cur; S.cur = clamp(S.cur + (Math.random() - .5) * p.amp * .35, p.min, p.max); S.at = new Date(); S.series[S.series.length - 1] = S.cur; renderNow(); renderChart(); renderRad() }, 5000);
+    load();
+  </script>
+</body>
+
+</html>
