@@ -50,13 +50,7 @@ BpPlaceholderParent.innerHTML = `
 // Fix: use querySelector instead of querySelectorAll
 const allcards = document.querySelectorAll(".tile")
 
-allcards.forEach((card) => {
-  const readingplaceholder = card.querySelector("b") 
-  const awaitedtext = card.querySelector("em")
-  if (readingplaceholder && readingplaceholder.innerText !== "-") {
-    awaitedtext.style.opacity = 0
-  }
-})
+
 
 function callNotification(start, param, end){
   const textarea = document.getElementById("textarea")
@@ -99,11 +93,13 @@ function callNotification(start, param, end){
 //   direction = directionController.value
 // })
 
+
 import { subscribe } from "./simulation.js";
 
 // Listen directly to the simulation feed so it triggers whenever readings update
 subscribe(({ readings }) => {
   const radiationValue = readings.rad;
+  
 
   if (radiationValue === undefined || radiationValue === null) return;
 
