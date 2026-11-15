@@ -7,7 +7,6 @@
     <title>AUHM</title>
     <link rel="shortcut icon" href="favicon.svg" type="image/x-icon">
     <style>
-
         :root {
             --bg: #070a12;
             --sf: #0b101c;
@@ -35,21 +34,21 @@
             min-height: 100vh
         }
 
-        .radiant-alert{
+        .radiant-alert {
             background-color: rgb(23, 4, 4);
         }
 
-        .normal{
+        .normal {
             background: radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10));
         }
 
-        .radiant-alert-tile{
+        .radiant-alert-tile {
             background: rgb(49, 6, 6);
         }
 
-        ::-webkit-scrollbar{
-            display:none;
-    }
+        ::-webkit-scrollbar {
+            display: none;
+        }
 
         .app {
             max-width: 1280px;
@@ -438,7 +437,7 @@
     </div>
     <script type="module">
         const $ = id => document.getElementById(id);
-        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "mSv/h", "dec": 1, "lo": 0, "hi": 23, "min": 0, "max": 60, "step": 15, "range": "below 41.7 µSv/h" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
+        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "mSv/h", "dec": 1, "lo": 0, "hi": 0.5, "min": 0, "max": 2, "step": 0.1, "range": "below 0.5 mSv/day" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
         P.bp.fmt = v => Math.round(v) + "/" + Math.round(v * .66);
         const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
         const MISSION_START = Date.UTC(2026, 6, 8);

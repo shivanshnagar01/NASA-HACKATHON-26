@@ -621,8 +621,8 @@
 
     Object.assign(P, {
       rad: {
-        name: "Radiation", tag: "Dose rate, measured continuously", unit: "mSv/h", dec: 1, lo: 0, hi: 25, min: 0, max: 60, step: 15, range: "below 41.7 µSv/h",
-        rad: { pel: 600, acc: 128.4, dlim: 1 }, recs: [
+        name: "Radiation", tag: "Dose rate, measured continuously", unit: "mSv/h", dec: 2, lo: 0, hi: 0.5, min: 0, max: 2, step: 0.1, range: "below 0.5 mSv/day",
+        rad: { pel: 600, acc: 128.4, dlim: 0.5 }, recs: [
           [0, "Know Your Storm Shelter", "During a solar particle event, move to the shielded area straight away."],
           [0, "Limit Time in High-Dose Areas", "Plan work in lightly shielded modules for the shortest time needed."],
           [0, "Wear Your Dosimeter", "Keep it on you at all times so your personal dose stays accurate."],

@@ -62,8 +62,8 @@ const scenarios = {
   },
 
   rad: {
-    warning: { high: [10, 15] },
-    critical: { high: [15, 30] }
+    warning: { high: [0.3, 0.5] },
+    critical: { high: [0.5, 3] }
   },
 
   ox: {
@@ -98,7 +98,7 @@ const generators = {
   bp_dia: createBoundedRandomGenerator(60, 85, 2),
   bs: createBoundedRandomGenerator(70, 140, 4),
   bt: createBoundedRandomGenerator(36.1, 37.5, 0.1, 1),
-  rad: createBoundedRandomGenerator(0, 30, 1.5, 1),
+  rad: createBoundedRandomGenerator(0, 0.5, 0.1, 2),
   ox: createBoundedRandomGenerator(95, 100, 1),
   sh: createBoundedRandomGenerator(7, 9, 0.2, 1),
   sq: createBoundedRandomGenerator(70, 100, 2),
@@ -270,7 +270,7 @@ const healthLimits = {
 
   bs: [70, 140],
   bt: [36.1, 37.5],
-  rad: [0, 23.5],
+  rad: [0, 0.5],
   ox: [95, 100],
   sh: [7, 9],
   sq: [70, 100],

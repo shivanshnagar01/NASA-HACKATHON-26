@@ -52,18 +52,18 @@ const allcards = document.querySelectorAll(".tile")
 
 
 
-function callNotification(start, param, end){
-  const textarea = document.getElementById("textarea")
-  textarea.innerText = start + param + end
+function callNotification(start, param, end) {
+    const textarea = document.getElementById("textarea")
+    textarea.innerText = start + param + end
 
-  // Fix typo: changed 'noti-acitve' to 'noti-active' to match CSS
-  notificationcard.classList.add("noti-active")
-  notificationcard.style.opacity = 1 // Ensure visibility when triggered
-    
-  setTimeout(() => {
-    notificationcard.classList.remove("noti-active")
-    notificationcard.style.opacity = 0
-  }, 3000); 
+    // Fix typo: changed 'noti-acitve' to 'noti-active' to match CSS
+    notificationcard.classList.add("noti-active")
+    notificationcard.style.opacity = 1 // Ensure visibility when triggered
+
+    setTimeout(() => {
+        notificationcard.classList.remove("noti-active")
+        notificationcard.style.opacity = 0
+    }, 3000);
 }
 
 // ModeController.addEventListener("change", () => {
@@ -98,53 +98,41 @@ import { subscribe } from "./simulation.js";
 
 // Listen directly to the simulation feed so it triggers whenever readings update
 subscribe(({ readings }) => {
-  const radiationValue = readings.rad;
-  
+    const radiationValue = readings.rad;
 
-  if (radiationValue === undefined || radiationValue === null) return;
 
-  if (radiationValue >= 25) {
-    callNotification("The radiation levels are crossing the daily limit.", " Take immediate steps, enter the storm shelter.", "");
-    
-    if (bodyif) {
-      bodyif.style.fill = "red";
-      bodyif.style.stroke = "red";
+    if (radiationValue === undefined || radiationValue === null) return;
+
+    if (radiationValue >= 0.5) {
+        callNotification("The radiation levels are crossing the daily limit.", " Take immediate steps, enter the storm shelter.", "");
+
+        if (bodyif) {
+            bodyif.style.fill = "red";
+            bodyif.style.stroke = "red";
+        }
+        // document.body.style.backgroundColor = "rgb(23, 4, 4)";
+        document.body.classList.add("radiant-alert")
+
+        document.querySelectorAll(".tile").forEach(tile => {
+            // tile.style.backgroundColor = "rgb(49, 6, 6)";
+            document.body.classList.add("radiant-alert-tile")
+        });
     }
-    // document.body.style.backgroundColor = "rgb(23, 4, 4)";
-    document.body.classList.add("radiant-alert")
-    
-    document.querySelectorAll(".tile").forEach(tile => {
-        // tile.style.backgroundColor = "rgb(49, 6, 6)";
-        document.body.classList.add("radiant-alert-tile")
-    });
-} 
-else if (radiationValue >= 18 && radiationValue < 21) {
-    callNotification("The radiation levels are near the daily limit.", " Take precautions and be careful.", "");
-    if (bodyif) {
-        bodyif.style.fill = "yellow";
-        bodyif.style.stroke = "yellow";
+    else if (radiationValue >= 0.3 && radiationValue < 0.5) {
+        callNotification("The radiation levels are near the daily limit.", " Take precautions and be careful.", "");
+        if (bodyif) {
+            bodyif.style.fill = "yellow";
+            bodyif.style.stroke = "yellow";
+        }
+        document.body.classList.remove("radiant-alert")
+        // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)`;
     }
-    document.body.classList.remove("radiant-alert")
-    // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)`;
-} 
-else if (radiationValue >= 21 && radiationValue < 25) {
-    callNotification("The radiation levels are near the daily limit.", " Take precautions and be careful.", "");
-    if (bodyif) {
-        bodyif.style.fill = "rgb(255, 159, 159)";
-        bodyif.style.stroke = "rgb(255, 192, 192)";
+    else {
+        if (notificationcard) {
+            notificationcard.style.opacity = 0;
+        }
+        document.body.classList.remove("radiant-alert")
+        // document.body.classList.add("normal")
+        // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10))`;
     }
-    document.body.classList.add("radiant-alert")
-    document.querySelectorAll(".tile").forEach(tile => {
-        tile.style.backgroundColor = "rgb(49, 6, 6)";
-    });
-    // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)`;
-} 
-else {
-    if (notificationcard) {
-        notificationcard.style.opacity = 0;
-    }
-    document.body.classList.remove("radiant-alert")
-    // document.body.classList.add("normal")
-    // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10))`;
-  }
 });
