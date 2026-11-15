@@ -752,7 +752,7 @@
       $("recs").innerHTML = p.recs.map((r, i) => `<div class="rec"><span>${String(i + 1).padStart(2, "0")}</span><h3>${r[1]}</h3><p>${r[2]}</p></div>`).join("");
     }
     function renderNav() {
-      $("nav").innerHTML = `<a class="back" href="index.html">← Dashboard</a>` + ORDER.map((k, i) => `<a class="i" href="#${k}"${k === S.key ? ' aria-current="page"' : ""}><span>${String(i + 1).padStart(2, "0")}</span>${P[k].name}</a>`).join("");
+      $("nav").innerHTML = `<a class="back" href="dashboard.html">← Dashboard</a>` + ORDER.map((k, i) => `<a class="i" href="#${k}"${k === S.key ? ' aria-current="page"' : ""}><span>${String(i + 1).padStart(2, "0")}</span>${P[k].name}</a>`).join("");
     }
     function setRange() {
       const p = P[S.key];

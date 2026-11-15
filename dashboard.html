@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AUHM</title>
+    <link rel="shortcut icon" href="favicon.svg" type="image/x-icon">
+    <style>
+        :root {
+            --bg: #070a12;
+            --sf: #0b101c;
+            --ln: rgba(255, 255, 255, .08);
+            --tx: #eef1f8;
+            --mu: #7d879f;
+            --ac: #9bbcff;
+            --ok: #6fd6a8;
+            --low: #e6b765;
+            --high: #ee8080;
+            --f: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0
+        }
+
+        body {
+            background: radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10), transparent 70%), var(--bg);
+            color: var(--tx);
+            font-family: var(--f);
+            letter-spacing: -.005em;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh
+        }
+
+        .radiant-alert {
+            background-color: rgb(23, 4, 4);
+        }
+
+        .normal {
+            background: radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10));
+        }
+
+        .radiant-alert-tile {
+            background: rgb(49, 6, 6);
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .app {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 26px 32px 72px
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px
+        }
+
+        .mark {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: .95rem;
+            letter-spacing: .02em
+        }
+
+        .meta-h {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: var(--mu);
+            font-size: .82rem
+        }
+
+        .on {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .on i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--ok)
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            margin: 72px 0 64px
+        }
+
+        .eb {
+            font-size: .74rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--mu)
+        }
+
+        h1 {
+            font-size: clamp(2.6rem, 6vw, 4.6rem);
+            font-weight: 200;
+            letter-spacing: -.04em;
+            line-height: 1.05;
+            margin-top: 18px
+        }
+
+        .sum {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 22px;
+            color: var(--c);
+            font-size: .95rem
+        }
+
+        .sum i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--c)
+        }
+
+        .sum span {
+            color: var(--mu);
+            margin-left: 6px
+        }
+
+
+        .figw {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            flex: none
+        }
+
+        .fig {
+            --b: var(--ok);
+            height: 230px;
+            width: auto;
+            filter: drop-shadow(0 0 16px color-mix(in srgb, var(--b) 30%, transparent));
+            transition: filter .6s
+        }
+
+        .fig path {
+            stroke: var(--b);
+            fill: var(--b);
+            fill-opacity: .12;
+            transition: stroke .6s, fill .6s
+        }
+
+        .cap {
+            font-size: .78rem;
+            color: var(--mu);
+            font-variant-numeric: tabular-nums
+        }
+
+        .ok {
+            --c: var(--ok)
+        }
+
+        .low {
+            --c: var(--low)
+        }
+
+        .high {
+            --c: var(--high)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 16px;
+            margin-top: 26px
+        }
+
+        .tile {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            padding: 20px 22px 18px;
+            background: var(--sf);
+            border: 1px solid var(--ln);
+            border-radius: 20px;
+            color: inherit;
+            text-decoration: none;
+            transition: border-color .25s, transform .25s, background .25s
+        }
+
+        .tile:hover {
+            border-color: rgba(155, 188, 255, .4);
+            transform: translateY(-2px);
+            background: #0d1424
+        }
+
+        .tile:focus-visible {
+            outline: 2px solid var(--ac);
+            outline-offset: 3px
+        }
+
+        .th {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .86rem
+        }
+
+        .th .n {
+            font-size: .7rem;
+            color: var(--ac);
+            font-variant-numeric: tabular-nums
+        }
+
+        .th .nm {
+            color: var(--mu);
+            flex: 1
+        }
+
+        .th .s {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--c);
+            font-size: .74rem
+        }
+
+        .th .s i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--c)
+        }
+
+        .val {
+            display: flex;
+            align-items: baseline;
+            gap: 8px
+        }
+
+        .val b {
+            font-size: 2.7rem;
+            font-weight: 200;
+            letter-spacing: -.04em;
+            line-height: 1;
+            font-variant-numeric: tabular-nums
+        }
+
+        .val span {
+            font-size: .82rem;
+            color: var(--mu)
+        }
+
+        .sp {
+            width: 100%;
+            height: 34px;
+            overflow: visible
+        }
+
+        .sp polyline {
+            fill: none;
+            stroke: var(--ac);
+            stroke-width: 1.5;
+            stroke-linejoin: round;
+            stroke-linecap: round;
+            vector-effect: non-scaling-stroke;
+            opacity: .85
+        }
+
+        .go {
+            position: absolute;
+            right: 20px;
+            bottom: 16px;
+            color: var(--ac);
+            opacity: 0;
+            transform: translateX(-4px);
+            transition: .25s
+        }
+
+        .tile:hover .go {
+            opacity: 1;
+            transform: none
+        }
+
+        /* #mode {
+            scale: 0.5;
+        } */
+
+        select {
+            top: 0;
+            position: fixed;
+            scale: 0.4;
+        }
+
+        #notification {
+            height: auto;
+            padding: 20px 20px;
+            background-color: #14223f;
+            border-radius: 10px;
+            border: 4px solid #0b2760;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 400px;
+            z-index: 100;
+            /* opacity: 0; */
+            transition: 0.5s;
+        }
+
+        .noti-active {
+            transition: 0.5s;
+            opacity: 1;
+        }
+
+        #eyebrow div {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        @media (max-width:700px) {
+            .figw {
+                display: none
+            }
+
+            .app {
+                padding: 18px 18px 56px
+            }
+
+            .hero {
+                margin: 48px 0 44px
+            }
+
+            .meta-h .d {
+                display: none
+            }
+
+            .grid {
+                grid-template-columns: 1fr 1fr;
+                /* background-color: rgb(83, 13, 13); */
+                gap: 12px
+            }
+
+            .tile {
+                padding: 16px
+            }
+
+            .val b {
+                font-size: 2rem
+            }
+
+            .th .s em {
+                display: none
+            }
+        }
+
+        @media (max-width:420px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            * {
+                transition: none !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="notification" class="noti">
+        <div id="eyebrow">
+            <div>&bullet; ALERT</div>
+        </div>
+        <div id="textarea"></div>
+    </div>
+    <!-- <label for="directioncontrol">Direction</label> -->
+    <!-- <select id="directioncontrol">
+        <option value="low">low</option>
+        <option value="high">high</option>
+    </select> -->
+    <!-- <label for="parameterselector">Parameter</label> -->
+    <!-- <select id="parameterselector">
+        <option value="hr">Heart rate</option>
+        <option value="bp">Blood Pressure</option>
+        <option value="bs">Blood sugar</option>
+        <option value="bt">Temperature</option>
+        <option value="rad">Radiation</option>
+        <option value="ox">Oxygen levels</option>
+        <option value="all">ALL</option>
+    
+    </select>
+    <label for="mode">Mode</label>
+    <select id="modeselector">
+        <option value="normal">Normal</option>
+        <option value="warning">Warning</option>
+        <option value="critical">Critical</option>
+    </select>  -->
+    <div class="app">
+        <header>
+            <div class="mark"><svg width="24" height="24" viewBox="0 0 72 72" fill="none" stroke="#9bbcff"
+                    stroke-width="5" aria-hidden="true">
+                    <circle cx="36" cy="36" r="14" />
+                    <ellipse cx="36" cy="38" rx="32" ry="10" transform="rotate(-25 36 38)" />
+                </svg>AUHM</div>
+            <div class="meta-h"><span id="day"></span><span class="d" id="clock"></span><span
+                    class="on"><i></i>Online</span></div>
+        </header>
+        <section class="hero">
+            <div>
+                <div class="eb">Health overview</div>
+                <h1>Welcome, Astronaut.</h1>
+                <div class="sum ok" id="sum" aria-live="polite"></div>
+            </div>
+            <div class="figw"><svg class="fig" id="bodyfigure" viewBox="0 0 200 620" fill="none" stroke-opacity=".85"
+                    stroke-width="2.5" stroke-linejoin="round" aria-hidden="true">
+                    <path
+                        d="M100 10C121 10 133 24 133 44C133 58 128 68 120 74L120 90C150 96 168 106 174 130L186 250C188 268 186 282 178 292C170 298 164 292 164 282L158 200L150 160C148 200 146 240 150 285C152 310 150 330 148 360C146 400 142 430 140 450C138 500 136 540 136 575L138 600C140 612 130 616 118 616L106 616C102 616 104 606 106 596L108 560C110 520 110 480 110 440C108 400 104 370 100 345C96 370 92 400 90 440C90 480 90 520 92 560L94 596C96 606 98 616 94 616L82 616C70 616 60 612 62 600L64 575C64 540 62 500 60 450C58 430 54 400 52 360C50 330 48 310 50 285C54 240 52 200 50 160L42 200L36 282C36 292 30 298 22 292C14 282 12 268 14 250L26 130C32 106 50 96 80 90L80 74C72 68 67 58 67 44C67 24 79 10 100 10Z" />
+                </svg>
+                <div class="cap" id="cap"></div>
+            </div>
+        </section>
+        <div class="eb">Parameters</div>
+        <main class="grid" id="grid"></main>
+    </div>
+    <script type="module">
+        const $ = id => document.getElementById(id);
+        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "mSv/h", "dec": 1, "lo": 0, "hi": 0.5, "min": 0, "max": 2, "step": 0.1, "range": "below 0.5 mSv/day" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
+        P.bp.fmt = v => Math.round(v) + "/" + Math.round(v * .66);
+        const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
+        const MISSION_START = Date.UTC(2026, 6, 8);
+        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+        const S = {};
+        ORDER.forEach(k => { S[k] = { s: [], cur: null }; });
+        const fv = (k, v) => { const p = P[k]; return p.fmt ? p.fmt(v) : v.toFixed(p.dec) };
+        const stat = (k, v) => { const p = P[k]; return v < p.lo ? ["Low", "low"] : v > p.hi ? ["High", "high"] : ["Normal", "ok"] };
+        function spark(k) {
+            const s = S[k].s;
+            if (!s.length) return "";
+            const mn = Math.min(...s), mx = Math.max(...s), sp = mx - mn || 1;
+            return s.map((v, i) => `${(i / Math.max(1, s.length - 1) * 120).toFixed(1)},${(30 - (v - mn) / sp * 28).toFixed(1)}`).join(" ");
+        }
+        $("grid").innerHTML = ORDER.map((k, i) => `<a class="tile" id="t-${k}" href="details.html#${k}" aria-label="${P[k].name}, open details">
+  <div class="th"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="nm">${P[k].name}</span><span class="s"><i></i><em></em></span></div>
+  <div class="val"><b data-reading="${k}" id="${k}"></b><span>${P[k].unit}</span></div>
+  <svg class="sp" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"><polyline/></svg><span class="go" aria-hidden="true">→</span></a>`).join("");
+
+        function getBodyColor(healthyCount) {
+            if (healthyCount === 10) return "#16a34a"; // Green
+            if (healthyCount === 9) return "#84cc16"; // Light green
+            if (healthyCount === 8) return "#eab308"; // Yellow
+            if (healthyCount === 7) return "#f97316"; // Orange
+
+            return "#dc2626"; // Red: 6 or fewer
+        }
+
+        function paint() {
+            let bad = 0;
+            let available = 0;
+
+            ORDER.forEach(k => {
+                const t = $("t-" + k);
+                const valElem = t.querySelector("b");
+                const textVal = valElem ? valElem.textContent.trim() : "—";
+                const hasReading = textVal !== "—";
+
+                t.className = "tile";
+
+                if (hasReading) {
+                    available++;
+                    // Parse the current number from the DOM element text
+                    const value = parseFloat(textVal);
+
+                    // Check if it's out of bounds based on P limits
+                    const p = P[k];
+                    let statusClass = "ok";
+                    if (Number.isFinite(value)) {
+                        if (value < p.lo) { statusClass = "low"; bad++; }
+                        else if (value > p.hi) { statusClass = "high"; bad++; }
+                    }
+
+                    t.querySelector("em").textContent = statText(k, value);
+                    t.classList.add(statusClass);
+                } else {
+                    t.querySelector("em").textContent = "Awaiting data";
+                }
+            });
+
+            const healthyCount = available - bad;
+            const col = available === ORDER.length ? getBodyColor(healthyCount) : "#7d879f";
+
+            // Update body colour
+            const body = $("bodyfigure").querySelector("path");
+            if (body) {
+                body.style.fill = col;
+                body.style.fillOpacity = "0.35";
+                body.style.stroke = col;
+            }
+
+            $("cap").textContent = available
+                ? `${healthyCount} / ${ORDER.length} within limits`
+                : "Awaiting health readings";
+
+            const el = $("sum");
+            el.className = "sum";
+            el.style.setProperty("--c", col);
+
+            el.innerHTML = available
+                ? `<i></i>${bad ? bad + (bad > 1 ? " readings need" : " reading needs") + " attention" : "All readings normal"}<span>Select a parameter to see details</span>`
+                : `<i></i>Awaiting readings<span>Simulation data not connected</span>`;
+        }
+
+        // Helper text for status
+        function statText(k, v) {
+            const p = P[k];
+            if (v < p.lo) return "Low";
+            if (v > p.hi) return "High";
+            return "Normal";
+        }
+
+        function clock() {
+            const d = new Date(); $("day").textContent = "Mission Day " + (Math.floor((d - MISSION_START) / 864e5) + 1);
+            $("clock").textContent = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }) + " · " + d.toISOString().slice(11, 16) + " UTC"
+        }
+        setInterval(clock, 1000); clock();
+
+        import { subscribe } from "./simulation.js";
+
+        subscribe(({ readings }) => {
+            // Update your local state or call paint() if it's in scope
+            if (typeof paint === "function") {
+                paint();
+            }
+        });
+
+    </script>
+
+    <script type="module" src="simulation.js"></script>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
