@@ -1,3 +1,15 @@
+const bpcard = document.getElementById("t-bp")
+const BpPlaceholderParent = bpcard.querySelector(".val")
+
+BpPlaceholderParent.innerHTML=`
+  <div>
+    <b data-reading="bp_sys">-</b>
+    <b>/</b>
+    <b data-reading="bp_dia">-</b>
+    <span>mmHg</span>
+  </div>
+`
+
 function createBoundedRandomGenerator(min, max, step, decimals = 0) {
   let previous = null;
   const factor = 10 ** decimals;
@@ -146,4 +158,23 @@ function generateAllReadings() {
 
 setSimulationMode("critical", "hr");
 
-console.log(generateAllReadings());
+const readings = (generateAllReadings());
+
+function renderReadings(readings) {
+    for (const parameter in readings) {
+        const elements = document.querySelectorAll(
+            `[data-reading="${parameter}"]`
+        );
+
+        elements.forEach(element => {
+            element.textContent = readings[parameter];
+        });
+    }
+}
+
+renderReadings(readings)
+
+setInterval(() => {
+    const readings = generateAllReadings();
+    renderReadings(readings);
+}, 2000);

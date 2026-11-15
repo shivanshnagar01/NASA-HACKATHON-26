@@ -373,7 +373,7 @@
         }
         $("grid").innerHTML = ORDER.map((k, i) => `<a class="tile" id="t-${k}" href="dashboard.html#${k}" aria-label="${P[k].name}, open details">
   <div class="th"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="nm">${P[k].name}</span><span class="s"><i></i><em></em></span></div>
-  <div class="val"><b id="${k}"></b><span>${P[k].unit}</span></div>
+  <div class="val"><b data-reading="${k}"></b><span>${P[k].unit}</span></div>
   <svg class="sp" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"><polyline/></svg><span class="go" aria-hidden="true">→</span></a>`).join("");
         function paint() {
             let bad = 0;
@@ -419,6 +419,8 @@
         setInterval(clock, 1000); clock(); paint();
 
     </script>
+
+    <script type="module" src="simulation.js"></script>
 </body>
 
 </html>
