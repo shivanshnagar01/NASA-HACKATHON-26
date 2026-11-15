@@ -276,6 +276,11 @@
             transform: none
         }
 
+        #mode {
+            position: fixed;
+            top: 0;
+        }
+
         @media (max-width:700px) {
             .figw {
                 display: none
@@ -326,6 +331,12 @@
 </head>
 
 <body>
+    <label for="mode">Mode</label>
+    <select id="mode">
+        <option value="normal">Normal</option>
+        <option value="warning">Warning</option>
+        <option value="critical">Critical</option>
+    </select>
     <div class="app">
         <header>
             <div class="mark"><svg width="24" height="24" viewBox="0 0 72 72" fill="none" stroke="#9bbcff"
@@ -342,7 +353,7 @@
                 <h1>Welcome, Astronaut.</h1>
                 <div class="sum ok" id="sum" aria-live="polite"></div>
             </div>
-            <div class="figw"><svg class="fig" id="fig" viewBox="0 0 200 620" fill="none" stroke-opacity=".85"
+            <div class="figw"><svg class="fig" id="bodyfigure" viewBox="0 0 200 620" fill="none" stroke-opacity=".85"
                     stroke-width="2.5" stroke-linejoin="round" aria-hidden="true">
                     <path
                         d="M100 10C121 10 133 24 133 44C133 58 128 68 120 74L120 90C150 96 168 106 174 130L186 250C188 268 186 282 178 292C170 298 164 292 164 282L158 200L150 160C148 200 146 240 150 285C152 310 150 330 148 360C146 400 142 430 140 450C138 500 136 540 136 575L138 600C140 612 130 616 118 616L106 616C102 616 104 606 106 596L108 560C110 520 110 480 110 440C108 400 104 370 100 345C96 370 92 400 90 440C90 480 90 520 92 560L94 596C96 606 98 616 94 616L82 616C70 616 60 612 62 600L64 575C64 540 62 500 60 450C58 430 54 400 52 360C50 330 48 310 50 285C54 240 52 200 50 160L42 200L36 282C36 292 30 298 22 292C14 282 12 268 14 250L26 130C32 106 50 96 80 90L80 74C72 68 67 58 67 44C67 24 79 10 100 10Z" />
@@ -355,7 +366,7 @@
     </div>
     <script>
         const $ = id => document.getElementById(id);
-        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Daily Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "µSv/h", "dec": 1, "lo": 0, "hi": 41.7, "min": 0, "max": 60, "step": 15, "range": "below 41.7 µSv/h" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
+        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "µSv/h", "dec": 1, "lo": 0, "hi": 41.7, "min": 0, "max": 60, "step": 15, "range": "below 41.7 µSv/h" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
         P.bp.fmt = v => Math.round(v) + "/" + Math.round(v * .66);
         const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
         const MISSION_START = Date.UTC(2026, 6, 8);
@@ -375,6 +386,16 @@
   <div class="th"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="nm">${P[k].name}</span><span class="s"><i></i><em></em></span></div>
   <div class="val"><b data-reading="${k}"></b><span>${P[k].unit}</span></div>
   <svg class="sp" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"><polyline/></svg><span class="go" aria-hidden="true">→</span></a>`).join("");
+
+        function getBodyColor(healthyCount) {
+            if (healthyCount === 10) return "#16a34a"; // Green
+            if (healthyCount === 9) return "#84cc16"; // Light green
+            if (healthyCount === 8) return "#eab308"; // Yellow
+            if (healthyCount === 7) return "#f97316"; // Orange
+
+            return "#dc2626"; // Red: 6 or fewer
+        }
+
         function paint() {
             let bad = 0;
             let available = 0;
@@ -385,38 +406,55 @@
                 const hasReading = Number.isFinite(value);
 
                 t.className = "tile";
-                t.querySelector("b").textContent = hasReading ? fv(k, value) : "—";
-                t.querySelector("em").textContent = hasReading ? stat(k, value)[0] : "Awaiting data";
+                t.querySelector("b").textContent =
+                    hasReading ? fv(k, value) : "—";
+
+                t.querySelector("em").textContent =
+                    hasReading ? stat(k, value)[0] : "Awaiting data";
+
                 t.querySelector("polyline").setAttribute("points", spark(k));
 
                 if (hasReading) {
                     available++;
-                    if (stat(k, value)[1] !== "ok") bad++;
+
+                    if (stat(k, value)[1] !== "ok") {
+                        bad++;
+                    }
+
                     t.classList.add(stat(k, value)[1]);
                 }
             });
 
-            const col = available
-                ? ["#6fd6a8", "#a8d96b", "#e3d35e", "#e8a24e", "#ee8080"][Math.min(bad, 4)]
+            const healthyCount = available - bad;
+
+            const col = available === ORDER.length
+                ? getBodyColor(healthyCount)
                 : "#7d879f";
 
-            $("fig").style.setProperty("--b", col);
+            // Update body colour
+            const body = $("bodyfigure").querySelector("path");
+            body.style.fill = col;
+            body.style.fillOpacity = "0.35";
+            body.style.stroke = col;
+
             $("cap").textContent = available
-                ? `${ORDER.length - bad} / ${ORDER.length} within limits`
+                ? `${healthyCount} / ${ORDER.length} within limits`
                 : "Awaiting health readings";
 
             const el = $("sum");
             el.className = "sum";
             el.style.setProperty("--c", col);
+
             el.innerHTML = available
                 ? `<i></i>${bad ? bad + (bad > 1 ? " readings need" : " reading needs") + " attention" : "All readings normal"}<span>Select a parameter to see details</span>`
                 : `<i></i>Awaiting readings<span>Simulation data not connected</span>`;
         }
+        
         function clock() {
             const d = new Date(); $("day").textContent = "Mission Day " + (Math.floor((d - MISSION_START) / 864e5) + 1);
             $("clock").textContent = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }) + " · " + d.toISOString().slice(11, 16) + " UTC"
         }
-        setInterval(clock, 1000); clock(); paint();
+        setInterval(clock, 1000); clock();
 
     </script>
 
