@@ -144,6 +144,7 @@ else {
         notificationcard.style.opacity = 0;
     }
     document.body.classList.remove("radiant-alert")
-    document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)`;
+    document.body.classList.add("normal")
+    document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10))`;
   }
 });
