@@ -276,9 +276,39 @@
             transform: none
         }
 
-        #mode {
-            position: fixed;
+        /* #mode {
+            scale: 0.5;
+        } */
+        
+        select{
             top: 0;
+            position: fixed;
+            scale: 0.4;
+        }
+
+        #notification{
+            height: auto;
+            padding: 20px 20px ;
+            background-color: #14223f;
+            border-radius: 10px;
+            border: 4px solid #0b2760;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 400px;
+            z-index: 100;
+            /* opacity: 0; */
+            transition: 0.5s;
+        }
+        
+         .noti-active{
+            transition: 0.5s;
+            opacity: 1;
+        }
+
+        #eyebrow div{
+            font-size: 20px;
+            font-weight: 700;
         }
 
         @media (max-width:700px) {
@@ -331,8 +361,30 @@
 </head>
 
 <body>
+    <div id="notification" class="noti">
+        <div id="eyebrow">
+            <div>&bullet; ALERT</div>
+        </div>
+        <div id="textarea"></div>
+    </div>
+    <label for="directioncontrol">Direction</label>
+    <select id="directioncontrol">
+        <option value="low">low</option>
+        <option value="high">high</option>
+    </select>
+    <label for="parameterselector">Parameter</label>
+    <select id="parameterselector">
+        <option value="hr">Heart rate</option>
+        <option value="bp">Blood Pressure</option>
+        <option value="bs">Blood sugar</option>
+        <option value="bt">Temperature</option>
+        <option value="rad">Radiation</option>
+        <option value="ox">Oxygen levels</option>
+        <option value="all">ALL</option>
+    
+    </select>
     <label for="mode">Mode</label>
-    <select id="mode">
+    <select id="modeselector">
         <option value="normal">Normal</option>
         <option value="warning">Warning</option>
         <option value="critical">Critical</option>
@@ -384,7 +436,7 @@
         }
         $("grid").innerHTML = ORDER.map((k, i) => `<a class="tile" id="t-${k}" href="dashboard.html#${k}" aria-label="${P[k].name}, open details">
   <div class="th"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="nm">${P[k].name}</span><span class="s"><i></i><em></em></span></div>
-  <div class="val"><b data-reading="${k}"></b><span>${P[k].unit}</span></div>
+  <div class="val"><b data-reading="${k}" id="${k}"></b><span>${P[k].unit}</span></div>
   <svg class="sp" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"><polyline/></svg><span class="go" aria-hidden="true">→</span></a>`).join("");
 
         function getBodyColor(healthyCount) {
@@ -449,12 +501,12 @@
                 ? `<i></i>${bad ? bad + (bad > 1 ? " readings need" : " reading needs") + " attention" : "All readings normal"}<span>Select a parameter to see details</span>`
                 : `<i></i>Awaiting readings<span>Simulation data not connected</span>`;
         }
-        
+
         function clock() {
             const d = new Date(); $("day").textContent = "Mission Day " + (Math.floor((d - MISSION_START) / 864e5) + 1);
             $("clock").textContent = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }) + " · " + d.toISOString().slice(11, 16) + " UTC"
         }
-        setInterval(clock, 1000); clock();
+        setInterval(clock, 1000); clock(); 
 
     </script>
 

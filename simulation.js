@@ -3,7 +3,40 @@ const actcard = document.getElementById("t-act")
 const BpPlaceholderParent = bpcard.querySelector(".val")
 const ActPlaceholderParent = actcard.querySelector(".val")
 
-BpPlaceholderParent.innerHTML=`
+// const bodyif = document.querySelector("#bodyfigure")
+const bodyif = document.querySelector("path")
+
+const notificationcard = document.getElementById("notification")
+
+const radiationlevelscounter = document.getElementById("rad")
+
+let radiationlevelreading = radiationlevelscounter.innerText
+
+let applyToAll = false;
+
+
+let direction = "low"
+
+const directionController = document.getElementById("directioncontrol")
+const ParameterController = document.getElementById("parameterselector")
+const ModeController = document.getElementById("modeselector")
+
+let selectedDirection = directionController.value || "low";
+
+directionController.addEventListener("change", () => {
+  selectedDirection = directionController.value;
+});
+
+ParameterController.addEventListener("click", () => {
+  if(ParameterController.value === "all"){
+    applyToAll = true
+  }else(ParameterController.value !== "all")
+  {
+    applyToAll = false
+  }
+});
+
+BpPlaceholderParent.innerHTML = `
   <div>
     <b data-reading="bp_sys">-</b>
     <b>/</b>
@@ -11,7 +44,7 @@ BpPlaceholderParent.innerHTML=`
     <span>mmHg</span>
   </div>
 `
-ActPlaceholderParent.innerHTML=`
+ActPlaceholderParent.innerHTML = `
   <div>
     <b data-reading="act_time">-</b>
     <span>min</span>
@@ -42,58 +75,58 @@ function createBoundedRandomGenerator(min, max, step, decimals = 0) {
 let currentReadings = {};
 const scenarios = {
   hr: {
-    warning:  { low: [50, 59],     high: [101, 120] },
-    critical: { low: [35, 49],     high: [121, 160] }
+    warning: { low: [50, 59], high: [101, 120] },
+    critical: { low: [35, 49], high: [121, 160] }
   },
 
   bp_sys: {
-    warning:  { low: [80, 89],     high: [121, 139] },
-    critical: { low: [50, 79],     high: [140, 200] }
+    warning: { low: [80, 89], high: [121, 139] },
+    critical: { low: [50, 79], high: [140, 200] }
   },
 
   bp_dia: {
-    warning:  { low: [50, 59],     high: [81, 89] },
-    critical: { low: [30, 49],     high: [90, 130] }
+    warning: { low: [50, 59], high: [81, 89] },
+    critical: { low: [30, 49], high: [90, 130] }
   },
 
   bs: {
-    warning:  { low: [54, 69],     high: [141, 180] },
-    critical: { low: [20, 53],     high: [181, 400] }
+    warning: { low: [54, 69], high: [141, 180] },
+    critical: { low: [20, 53], high: [181, 400] }
   },
 
   bt: {
-    warning:  { low: [35.5, 36.0], high: [37.3, 38.0] },
+    warning: { low: [35.5, 36.0], high: [37.3, 38.0] },
     critical: { low: [30.0, 35.4], high: [38.1, 42.0] }
   },
 
   rad: {
-    warning:  { high: [1.1, 4.0] },
-    critical: { high: [4.1, 25] }
+    warning: { high: [10, 15] },
+    critical: { high: [15, 30] }
   },
 
   ox: {
-    warning:  { low: [90, 94] },
+    warning: { low: [90, 94] },
     critical: { low: [50, 89] }
   },
 
   sh: {
-    warning:  { low: [5.0, 6.4],   high: [9.1, 10.0] },
-    critical: { low: [0, 4.9],     high: [10.1, 24] }
+    warning: { low: [5.0, 6.4], high: [9.1, 10.0] },
+    critical: { low: [0, 4.9], high: [10.1, 24] }
   },
 
   sq: {
-    warning:  { low: [50, 74] },
+    warning: { low: [50, 74] },
     critical: { low: [0, 49] }
   },
 
   st: {
-    warning:  { high: [51, 74] },
+    warning: { high: [51, 74] },
     critical: { high: [75, 100] }
   },
 
   act: {
-    warning:  { low: [60, 119],    high: [181, 240] },
-    critical: { low: [0, 59],      high: [241, 600] }
+    warning: { low: [60, 119], high: [181, 240] },
+    critical: { low: [0, 59], high: [241, 600] }
   }
 };
 
@@ -103,7 +136,7 @@ const generators = {
   bp_dia: createBoundedRandomGenerator(60, 85, 2),
   bs: createBoundedRandomGenerator(70, 140, 4),
   bt: createBoundedRandomGenerator(36.1, 37.5, 0.1, 1),
-  rad: createBoundedRandomGenerator(0, 27, 1.5, 1),
+  rad: createBoundedRandomGenerator(0, 30, 1.5, 1),
   ox: createBoundedRandomGenerator(95, 100, 1),
   sh: createBoundedRandomGenerator(7, 9, 0.2, 1),
   sq: createBoundedRandomGenerator(70, 100, 2),
@@ -113,43 +146,54 @@ const generators = {
 
 
 const fastParameters = [
-    "hr",
-    "bp_sys",
-    "bp_dia",
-    "bs",
-    "bt",
-  ];
-  
-  const slowReadings = {
-    rad: 0,
-    st: 2,
-    sh: 8,
-    sq: 85,
-    act: 0,
-    ox: 95
+  "hr",
+  "bp_sys",
+  "bp_dia",
+  "bs",
+  "bt",
+];
+
+const slowReadings = {
+  rad: 0,
+  st: 2,
+  sh: 8,
+  sq: 85,
+  act: 0,
+  ox: 95
 };
 
 let simulationMode = "normal";
 let selectedParameter = "hr";
 
 function randomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min) + 1) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generateReading(parameter, direction = "low") {
-    const scenario = scenarios[parameter];
+function generateReading(parameter) {
+  const scenario = scenarios[parameter];
 
-    if (
-        selectedParameter === parameter &&
-        simulationMode !== "normal" &&
-        scenario?.[simulationMode]
-    ) {
-        const [min, max] = scenario[simulationMode][direction];
+  if (
+    (applyToAll || selectedParameter === parameter) &&
+    simulationMode !== "normal"
+  ) {
+    const ranges = scenario[simulationMode];
 
-        return randomNumber(min, max);
-    }
+    // Use the selected direction, or the only available direction
+    const selectedRange = ranges[direction] ?? Object.values(ranges)[0];
 
-    return generators[parameter]();
+    const [min, max] = selectedRange;
+
+    // Preserve decimal values for applicable parameters
+    const decimals = ["bt", "rad", "sh", "st"].includes(parameter) ? 1 : 0;
+    const factor = 10 ** decimals;
+
+    return (
+      Math.floor(Math.random() * (max * factor - min * factor + 1)) +
+      min * factor
+    ) / factor;
+  }
+
+  return generators[parameter]();
 }
 
 
@@ -176,19 +220,19 @@ function getSimulationMode() {
 
 function generateAllReadings() {
   const readings = {};
-  
+
   for (const parameter in generators) {
     readings[parameter] = generateReading(parameter);
   }
-  
+
   return readings;
 }
 
 currentReadings = generateAllReadings();
 
 const activity = {
-    score: currentReadings.act,
-    activeMinutes: 73
+  score: currentReadings.act,
+  activeMinutes: 73
 };
 
 setSimulationMode("normal", "hr");
@@ -198,38 +242,53 @@ function renderReadings(readings) {
     const elements = document.querySelectorAll(
       `[data-reading="${parameter}"]`
     );
-    
+
     elements.forEach(element => {
       element.textContent = readings[parameter];
     });
   }
 }
 
+function callNotification(start, param , end){
+  const textarea = document.getElementById("textarea")
+
+  textarea.innerText = start + param + end
+
+    notificationcard.classList.add("noti-acitve")
+    
+    setTimeout(() => {
+      notificationcard.classList.remove("noti-acitve")
+      notificationcard.style.opacity = 0
+    }, 3000); 
+}
+
+
+
 function updateFastReadings() {
   fastParameters.forEach(parameter => {
     currentReadings[parameter] = generateReading(parameter);
   });
-  
+
   renderReadings(currentReadings);
 }
 
 function updateActivityTime() {
-    activity.activeMinutes++;
+  activity.activeMinutes++;
 
-    currentReadings.act_time = activity.activeMinutes;
+  currentReadings.act_time = activity.activeMinutes;
 
-    renderReadings(currentReadings);
+  renderReadings(currentReadings);
 }
 function updateStress() {
   slowReadings.st = generators.st();
   currentReadings.st = slowReadings.st;
-  
+
   renderReadings(currentReadings);
 }
 function updateOxylevels() {
   slowReadings.ox = generators.ox();
   currentReadings.ox = slowReadings.ox;
-  
+
   renderReadings(currentReadings);
 }
 
@@ -249,75 +308,112 @@ setInterval(() => {
 
 const allcards = document.querySelectorAll(".tile")
 
-allcards.forEach((card)=>{
+allcards.forEach((card) => {
   const readingplaceholder = card.querySelectorAll("b")
-const awaitedtext = card.querySelector("em")
-  if(readingplaceholder.innerText != "-"){
-     awaitedtext.style.opacity = 0
+  const awaitedtext = card.querySelector("em")
+  if (readingplaceholder.innerText != "-") {
+    awaitedtext.style.opacity = 0
   }
 })
 
 
 const healthLimits = {
-    hr: [60, 100],
+  hr: [60, 100],
 
-    bp: {
-        sys: [90, 130],
-        dia: [60, 85]
-    },
+  bp: {
+    sys: [90, 130],
+    dia: [60, 85]
+  },
 
-    bs: [70, 140],
-    bt: [36.1, 37.5],
-    rad: [0, 23.5],
-    ox: [95, 100],
-    sh: [7, 9],
-    sq: [70, 100],
-    st: [0, 6],
-    act: [60, 100]
+  bs: [70, 140],
+  bt: [36.1, 37.5],
+  rad: [0, 23.5],
+  ox: [95, 100],
+  sh: [7, 9],
+  sq: [70, 100],
+  st: [0, 6],
+  act: [60, 100]
 };
 
 function getHealthStatus(readings) {
-    let healthyCount = 0;
+  let healthyCount = 0;
 
-    const inRange = (value, limits) =>
-        value >= limits[0] && value <= limits[1];
+  const inRange = (value, limits) =>
+    value >= limits[0] && value <= limits[1];
 
-    if (inRange(readings.hr, healthLimits.hr))
+  if (inRange(readings.hr, healthLimits.hr))
+    healthyCount++;
+
+  if (
+    inRange(readings.bp_sys, healthLimits.bp.sys) &&
+    inRange(readings.bp_dia, healthLimits.bp.dia)
+  ) healthyCount++;
+
+  ["bs", "bt", "rad", "ox", "sh", "sq", "st", "act"]
+    .forEach(parameter => {
+      if (inRange(readings[parameter], healthLimits[parameter])) {
         healthyCount++;
+      }
+    });
 
-    if (
-        inRange(readings.bp_sys, healthLimits.bp.sys) &&
-        inRange(readings.bp_dia, healthLimits.bp.dia)
-    ) healthyCount++;
-
-    ["bs", "bt", "rad", "ox", "sh", "sq", "st", "act"]
-        .forEach(parameter => {
-            if (inRange(readings[parameter], healthLimits[parameter])) {
-                healthyCount++;
-            }
-        });
-
-    return healthyCount;
+  console.log(healthyCount)
 }
 
-function getBodyColor(healthyCount) {
-    const colors = {
-        10: "#16A34A",
-        9: "#65A30D",
-        8: "#CA8A04",
-        7: "#EA580C",
-        6: "#DC2626"
-    };
-
-    return colors[Math.min(healthyCount, 10)] || "#DC2626";
+function rendercolor(count){
+   if(count < 10){
+    
+   }
 }
 
-function updateBodyFigure(readings) {
-    const healthyCount = getHealthStatus(readings);
-    const color = getBodyColor(healthyCount);
+getHealthStatus(currentReadings)
 
-    document.querySelectorAll("#bodyFigure .body-fill")
-        .forEach(part => {
-            part.style.fill = color;
-        });
+ModeController.addEventListener("change", () => {
+  setSimulationMode(
+    ModeController.value,
+    ParameterController.value
+  );
+});
+
+
+ParameterController.addEventListener("change", () => {
+  setSimulationMode(
+    ModeController.value,
+    ParameterController.value
+  );
+
+});
+
+if (ParameterController.value === "all") {
+  setSimulationMode(
+    ModeController.value,
+
+  )
 }
+
+directionController.addEventListener("input", () => {
+  direction = directionController.value
+})
+
+document.addEventListener("DOMContentLoaded",()=>{
+  radiationlevelreading = radiationlevelscounter.innerText
+  console.log(bodyif)
+  
+  if(radiationlevelreading >= 25 ){
+    callNotification("The radiation levels are crossing the daily limit." , " Take Immediate steps, enetr the storm shelter")
+    
+    bodyif.style.fill = "red"
+    bodyif.style.stroke = "red"
+    
+    
+    // callNotification()
+  }
+  else if(radiationlevelreading >= 18 && radiationlevelreading <= 25){
+    // callNotification()
+    callNotification("The radiation levels are near the daily limit." , " Take precautions and be careful")
+    bodyif.style.fill = "yellow"
+    bodyif.style.stroke = "yellow"
+  }
+  else{
+    notificationcard.style.opacity = 0
+  }
+})
