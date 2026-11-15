@@ -110,10 +110,12 @@ subscribe(({ readings }) => {
       bodyif.style.fill = "red";
       bodyif.style.stroke = "red";
     }
-    document.body.style.backgroundColor = "rgb(23, 4, 4)";
+    // document.body.style.backgroundColor = "rgb(23, 4, 4)";
+    document.body.classList.add("radiant-alert")
     
     document.querySelectorAll(".tile").forEach(tile => {
-        tile.style.backgroundColor = "rgb(49, 6, 6)";
+        // tile.style.backgroundColor = "rgb(49, 6, 6)";
+        document.body.classList.add("radiant-alert-tile")
     });
 } 
 else if (radiationValue >= 18 && radiationValue < 21) {
@@ -122,6 +124,8 @@ else if (radiationValue >= 18 && radiationValue < 21) {
         bodyif.style.fill = "yellow";
         bodyif.style.stroke = "yellow";
     }
+    document.body.classList.remove("radiant-alert")
+    // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)`;
 } 
 else if (radiationValue >= 21 && radiationValue < 25) {
     callNotification("The radiation levels are near the daily limit.", " Take precautions and be careful.", "");
@@ -129,11 +133,17 @@ else if (radiationValue >= 21 && radiationValue < 25) {
         bodyif.style.fill = "rgb(255, 159, 159)";
         bodyif.style.stroke = "rgb(255, 192, 192)";
     }
+    document.body.classList.add("radiant-alert")
+    document.querySelectorAll(".tile").forEach(tile => {
+        tile.style.backgroundColor = "rgb(49, 6, 6)";
+    });
+    // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)`;
 } 
 else {
     if (notificationcard) {
         notificationcard.style.opacity = 0;
     }
-    document.body.style.background = "radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)";
+    document.body.classList.remove("radiant-alert")
+    // document.body.style.background = `radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)`;
   }
 });
