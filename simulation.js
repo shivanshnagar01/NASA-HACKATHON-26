@@ -98,7 +98,7 @@ const generators = {
   bp_dia: createBoundedRandomGenerator(60, 85, 2),
   bs: createBoundedRandomGenerator(70, 140, 4),
   bt: createBoundedRandomGenerator(36.1, 37.5, 0.1, 1),
-  rad: createBoundedRandomGenerator(0, 0.5, 0.1, 2),
+  rad: createBoundedRandomGenerator(0, 1, 0.1, 2),
   ox: createBoundedRandomGenerator(95, 100, 1),
   sh: createBoundedRandomGenerator(7, 9, 0.2, 1),
   sq: createBoundedRandomGenerator(70, 100, 2),

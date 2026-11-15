@@ -103,7 +103,7 @@ subscribe(({ readings }) => {
 
     if (radiationValue === undefined || radiationValue === null) return;
 
-    if (radiationValue >= 0.5) {
+    if (radiationValue >= 0.50) {
         callNotification("The radiation levels are crossing the daily limit.", " Take immediate steps, enter the storm shelter.", "");
 
         if (bodyif) {
@@ -117,7 +117,7 @@ subscribe(({ readings }) => {
             tile.style.backgroundColor = "rgb(49, 6, 6)";
         });
     }
-    else if (radiationValue >= 0.3 && radiationValue < 0.5) {
+    else if (radiationValue >= 0.30 && radiationValue < 0.50) {
         callNotification("The radiation levels are near the daily limit.", " Take precautions and be careful.", "");
         if (bodyif) {
             bodyif.style.fill = "yellow";
