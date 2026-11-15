@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AUHM · Check a reading</title>
+  <style>
+    :root {
+      --bg: #070a12;
+      --sf: #0b101c;
+      --ln: rgba(255, 255, 255, .08);
+      --tx: #eef1f8;
+      --mu: #7d879f;
+      --ac: #9bbcff;
+      --ok: #6fd6a8;
+      --low: #e6b765;
+      --high: #ee8080;
+      --f: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif
+    }
+
+    * { box-sizing: border-box; margin: 0 }
+
+    body {
+      background: radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10), transparent 70%), var(--bg);
+      color: var(--tx);
+      font-family: var(--f);
+      letter-spacing: -.005em;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh
+    }
+
+    .app { max-width: 1100px; margin: 0 auto; padding: 26px 32px 72px }
+
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px }
+    .mark { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: .95rem; letter-spacing: .02em }
+    .back { color: var(--mu); font-size: .82rem; text-decoration: none }
+    .back:hover { color: var(--tx) }
+
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+      outline: 2px solid var(--ac);
+      outline-offset: 3px;
+      border-radius: 6px
+    }
+
+    h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 300; letter-spacing: -.03em; margin-top: 56px }
+    .lead { color: var(--mu); margin-top: 10px; max-width: 52ch; line-height: 1.55 }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+      gap: 56px;
+      margin-top: 44px;
+      align-items: start
+    }
+
+    .eb { font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; color: var(--mu) }
+
+    form { display: flex; flex-direction: column; gap: 22px; margin-top: 18px }
+    label { display: block; font-size: .82rem; color: var(--mu); margin-bottom: 8px }
+
+    select, input {
+      width: 100%;
+      background: var(--sf);
+      color: var(--tx);
+      border: 1px solid var(--ln);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font: inherit;
+      font-size: 1rem
+    }
+
+    select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--mu) 50%), linear-gradient(135deg, var(--mu) 50%, transparent 50%); background-position: calc(100% - 20px) 55%, calc(100% - 14px) 55%; background-size: 6px 6px; background-repeat: no-repeat }
+    input::placeholder { color: #4c556b }
+
+    .inrow { display: flex; align-items: center; gap: 10px }
+    .inrow .u { color: var(--mu); font-size: .9rem; min-width: 52px }
+
+    .hint { color: var(--mu); font-size: .8rem; margin-top: 7px }
+
+    button.go {
+      align-self: start;
+      background: var(--ac);
+      color: #0a1020;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 22px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer
+    }
+    button.go:hover { filter: brightness(1.08) }
+
+    .panel { border: 1px solid var(--ln); border-radius: 16px; background: rgba(11, 16, 28, .6); padding: 28px; min-height: 260px }
+
+    .empty { color: var(--mu); line-height: 1.6 }
+
+    .head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
+    .chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      padding: 6px 12px; border-radius: 999px; border: 1px solid currentColor
+    }
+    .chip i { width: 7px; height: 7px; border-radius: 50%; background: currentColor }
+    .ok { color: var(--ok) }
+    .warn { color: var(--low) }
+    .crit { color: var(--high) }
+
+    .big { font-size: 2.6rem; font-weight: 200; letter-spacing: -.04em; margin-top: 16px; font-variant-numeric: tabular-nums }
+    .big span { font-size: 1rem; color: var(--mu); margin-left: 8px; letter-spacing: 0 }
+    .msg { margin-top: 8px; line-height: 1.55; color: #c9d1e4 }
+
+    .bars { margin-top: 22px; display: flex; flex-direction: column; gap: 18px }
+    .rb { position: relative; height: 6px; border-radius: 4px; background: rgba(255, 255, 255, .07) }
+    .rb .band { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: rgba(111, 214, 168, .35) }
+    .rb .mk { position: absolute; top: -5px; width: 3px; height: 16px; border-radius: 2px; background: #fff }
+    .rl { display: flex; justify-content: space-between; font-size: .74rem; color: var(--mu); margin-top: 8px; gap: 8px }
+    .rt { font-size: .78rem; color: var(--mu); margin-bottom: 10px }
+
+    .alert {
+      margin-top: 22px; padding: 14px 16px; border-radius: 12px;
+      border: 1px solid rgba(238, 128, 128, .5); background: rgba(238, 128, 128, .08); color: #f3b0b0; line-height: 1.5; font-size: .92rem
+    }
+
+    h2 { font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; color: var(--mu); font-weight: 500; margin: 28px 0 4px }
+    ol { list-style: none; padding: 0; counter-reset: s }
+    ol li { counter-increment: s; display: flex; gap: 14px; padding: 12px 0; border-top: 1px solid var(--ln); line-height: 1.5; font-size: .95rem }
+    ol li:first-child { border-top: 0 }
+    ol li::before { content: counter(s, decimal-leading-zero); color: var(--ac); font-size: .72rem; padding-top: 3px; min-width: 18px; font-variant-numeric: tabular-nums }
+
+    .note { color: var(--mu); font-size: .78rem; margin-top: 26px; line-height: 1.5 }
+
+    @media (max-width: 860px) {
+      .app { padding: 20px 18px 56px }
+      .grid { grid-template-columns: 1fr; gap: 32px }
+      h1 { margin-top: 36px }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="mark"><svg width="24" height="24" viewBox="0 0 72 72" fill="none" stroke="#9bbcff" stroke-width="5" aria-hidden="true">
+          <circle cx="36" cy="36" r="14" />
+          <ellipse cx="36" cy="38" rx="32" ry="10" transform="rotate(-25 36 38)" />
+        </svg>AUHM</div>
+      <a class="back" href="details.html">← Back</a>
+    </header>
+
+    <h1>Check a reading</h1>
+    <p class="lead">Pick a parameter and type in a reading. You will see whether it is within the limit and which steps to take.</p>
+
+    <div class="grid">
+      <section>
+        <div class="eb">Your reading</div>
+        <form id="form" novalidate>
+          <div>
+            <label for="param">Parameter</label>
+            <select id="param"></select>
+          </div>
+          <div id="fields"></div>
+          <!-- <button class="go" type="submit">Check reading</button> -->
+        </form>
+      </section>
+
+      <section class="panel" id="result" aria-live="polite">
+        <div class="empty">Your result will appear here.</div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    /* ===== EDIT HERE: limits and advice for every parameter =====
+       n         normal range [from, to]
+       critLow   below this value the reading is critical (between critLow and n[0] = warning)
+       critHigh  above this value the reading is critical (between n[1] and critHigh = warning)
+       abs       the possible range of the sensor; anything outside is treated as a typing mistake
+       show      the range drawn on the bar                                                         */
+    const P = {
+      hr: {
+        name: "Heart rate", unit: "bpm", dec: 0,
+        fields: [{ label: "Heart rate", n: [60, 100], critLow: 50, critHigh: 120, abs: [20, 250], show: [30, 160] }],
+        ok: ["Keep up your daily exercise and sleep routine.", "Stay hydrated and keep caffeine low."],
+        low: ["Sit or lie down and rest; stand up slowly.", "Note any dizziness, fainting or chest discomfort.", "Re-measure in 5 minutes.", "If it stays low, tell the medical team."],
+        high: ["Stop what you are doing and rest.", "Take slow, deep breaths for a few minutes.", "Drink water and avoid caffeine.", "Re-measure in 5 minutes; if it stays high, tell the medical team."]
+      },
+      bp: {
+        name: "Blood pressure", unit: "mmHg", dec: 0,
+        fields: [
+          { label: "Systolic (upper)", n: [90, 130], critLow: 80, critHigh: 139, abs: [40, 260], show: [50, 180] },
+          { label: "Diastolic (lower)", n: [60, 85], critLow: 50, critHigh: 89, abs: [20, 160], show: [30, 120] }],
+        ok: ["Keep meals low in sodium and fluids steady.", "Keep exercising regularly."],
+        low: ["Sit or lie down and rise slowly.", "Drink water or an electrolyte drink.", "Watch for dizziness, blurred vision or fainting.", "Re-measure in 10 minutes; if it stays low, tell the medical team."],
+        high: ["Sit quietly for 5 minutes, then measure again.", "Choose low-sodium food and drink water.", "Avoid caffeine and strenuous exercise for now.", "If you have a headache, blurred vision or chest pain, tell the medical team."]
+      },
+      bs: {
+        name: "Blood sugar", unit: "mg/dL", dec: 0,
+        fields: [{ label: "Blood sugar", n: [70, 140], critLow: 54, critHigh: 180, abs: [10, 600], show: [30, 260] }],
+        ok: ["Keep balanced meals at regular times.", "Light daily activity helps keep it steady."],
+        low: ["Eat or drink about 15 g of fast sugar (juice or glucose tablets).", "Re-measure after 15 minutes and repeat if still low.", "Have a proper snack once it recovers.", "Tell the medical team that it dropped."],
+        high: ["Drink water and avoid sugary food and drinks.", "A short, easy walk or exercise session can help if you feel well.", "Re-measure in 30 to 60 minutes.", "If it stays high or you feel unwell, tell the medical team."]
+      },
+      bt: {
+        name: "Body temperature", unit: "°C", dec: 1,
+        fields: [{ label: "Body temperature", n: [36.1, 37.5], critLow: 35.5, critHigh: 38.0, abs: [25, 45], show: [34, 40] }],
+        ok: ["Dress for comfort and keep the cabin temperature steady."],
+        low: ["Warm up: add layers and have a warm drink.", "Check the cabin temperature.", "Re-measure in 15 minutes.", "If it stays low or you shiver heavily, tell the medical team."],
+        high: ["Rest, remove extra layers and cool down.", "Drink plenty of water.", "Re-measure in 15 minutes.", "If it stays high, tell the medical team."]
+      },
+      rad: {
+        name: "Radiation", unit: "mSv/h", dec: 1,
+        fields: [{ label: "Radiation", n: [0, 18], critLow: -Infinity, critHigh: 25, abs: [0, 100], show: [0, 40] }],
+        ok: ["Keep your dosimeter on you at all times.", "Know the way to your storm shelter."],
+        low: ["Nothing to do; a lower dose is better."],
+        high: ["Move to the shielded storm shelter straight away.", "Limit time in lightly shielded modules.", "Check that your dosimeter is working and on you.", "Report the reading to mission control and wait for their all-clear."]
+      },
+      ox: {
+        name: "Oxygen level", unit: "%", dec: 0,
+        fields: [{ label: "Oxygen saturation", n: [95, 100], critLow: 90, critHigh: Infinity, abs: [40, 100], show: [80, 100] }],
+        ok: ["Warm up before exercise and breathe steadily."],
+        low: ["Sit upright and breathe slowly and deeply.", "Stop strenuous activity.", "Check cabin oxygen and CO₂ levels.", "Re-measure in 5 minutes; if it stays low, tell the medical team."],
+        high: ["Nothing to do; this is the top of the scale."]
+      },
+      sh: {
+        name: "Daily sleep", unit: "hrs", dec: 1,
+        fields: [{ label: "Sleep last night", n: [7, 9], critLow: 5, critHigh: 10, abs: [0, 24], show: [0, 12] }],
+        ok: ["Keep a regular sleep and wake time."],
+        low: ["Plan an earlier, longer rest period today.", "Keep caffeine and bright screens away before sleep.", "Avoid demanding tasks while very tired.", "If poor sleep continues, tell the medical team."],
+        high: ["Long sleep now and then is fine.", "If you feel tired even after long sleep, mention it to the medical team."]
+      },
+      sq: {
+        name: "Sleep quality", unit: "%", dec: 0,
+        fields: [{ label: "Sleep quality", n: [70, 100], critLow: 50, critHigh: Infinity, abs: [0, 100], show: [0, 100] }],
+        ok: ["Keep your sleep area dark, quiet and cool."],
+        low: ["Dim the lights an hour before bed and keep a fixed schedule.", "Avoid caffeine and heavy meals late in the day.", "Check noise and light around your sleep station.", "If restless nights continue, tell the medical team."],
+        high: ["Nothing to do; this is the top of the scale."]
+      },
+      st: {
+        name: "Stress level", unit: "/ 10", dec: 1,
+        fields: [{ label: "Stress level", n: [0, 6], critLow: -Infinity, critHigh: 7.5, abs: [0, 10], show: [0, 10] }],
+        ok: ["Keep up short breaks, exercise and contact with family and friends."],
+        low: ["Nothing to do; low stress is good."],
+        high: ["Take a few minutes of slow breathing.", "Take a short exercise or movement break.", "Talk to a crewmate or call someone you trust.", "If stress stays high, talk to the flight surgeon or psychologist."]
+      },
+      act: {
+        name: "Activity", unit: "min", dec: 0,
+        fields: [{ label: "Exercise today", n: [90, 180], critLow: 60, critHigh: 240, abs: [0, 1440], show: [0, 300] }],
+        ok: ["Keep mixing resistance and cardio sessions."],
+        low: ["Add an exercise session today, split into two shorter blocks if easier.", "Warm up for 5 minutes first.", "Resistance work protects bone and muscle in microgravity.", "If pain stops you from training, tell the medical team."],
+        high: ["Rest and recover; do not add more training today.", "Drink water and eat well.", "Stretch and cool down.", "Tell the medical team about pain or strain that does not settle."]
+      }
+    };
+
+    const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
+    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    const fmt = (v, d) => (+v).toFixed(d);
+
+    function classify(v, f) {
+      if (v < f.critLow) return ["crit", "low"];
+      if (v > f.critHigh) return ["crit", "high"];
+      if (v < f.n[0]) return ["warn", "low"];
+      if (v > f.n[1]) return ["warn", "high"];
+      return ["ok", null];
+    }
+
+    function buildFields() {
+      const p = P[$("param").value];
+      $("fields").innerHTML = p.fields.map((f, i) => `<div style="margin-top:${i ? 18 : 0}px">
+        <label for="v${i}">${p.fields.length > 1 ? f.label : "Reading"}</label>
+        <div class="inrow"><input id="v${i}" type="number" inputmode="decimal" step="any" placeholder="e.g. ${fmt((f.n[0] + f.n[1]) / 2, p.dec)}"><span class="u">${p.unit}</span></div>
+        <div class="hint">Normal: ${fmt(f.n[0], p.dec)} – ${fmt(f.n[1], p.dec)} ${p.unit}</div></div>`).join("");
+      p.fields.forEach((f, i) => {
+        $("v" + i).addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(() => check(true), 700); });
+        $("v" + i).addEventListener("change", () => check());
+      });
+    }
+
+    function bar(v, f, p, level) {
+      const [a, b] = f.show, pc = x => clamp((x - a) / (b - a), 0, 1) * 100;
+      const lo = pc(f.n[0]), hi = pc(f.n[1]);
+      return `<div>${p.fields.length > 1 ? `<div class="rt">${f.label}: <b class="${level}">${fmt(v, p.dec)} ${p.unit}</b></div>` : ""}
+        <div class="rb"><div class="band" style="left:${lo}%;width:${hi - lo}%"></div><div class="mk" style="left:calc(${pc(v)}% - 1px)"></div></div>
+        <div class="rl"><span>${a}</span><span>Normal ${fmt(f.n[0], p.dec)} – ${fmt(f.n[1], p.dec)} ${p.unit}</span><span>${b}</span></div></div>`;
+    }
+
+    let timer;
+    const placeholder = '<div class="empty">Your result will appear here.</div>';
+    // quiet = live check while typing: show a result only when the number is complete and valid
+    function check(quiet) {
+      clearTimeout(timer);
+      const key = $("param").value, p = P[key], out = $("result");
+      const vals = p.fields.map((f, i) => $("v" + i).value.trim());
+
+      if (quiet && vals.some(v => v === "" || !Number.isFinite(Number(v)))) { out.innerHTML = placeholder; return; }
+      if (vals.some(v => v === "")) { out.innerHTML = `<div class="empty">Enter ${p.fields.length > 1 ? "both readings" : "a reading"} to see the result.</div>`; return; }
+      const nums = vals.map(Number);
+      const bad = nums.findIndex((v, i) => !Number.isFinite(v) || v < p.fields[i].abs[0] || v > p.fields[i].abs[1]);
+      if (bad >= 0 && quiet) { out.innerHTML = placeholder; return; }
+      if (bad >= 0) {
+        const f = p.fields[bad];
+        out.innerHTML = `<div class="empty">That value does not look right for ${p.name.toLowerCase()} (possible range ${f.abs[0]} – ${f.abs[1]} ${p.unit}). Please check the number and try again.</div>`;
+        return;
+      }
+
+      const res = nums.map((v, i) => classify(v, p.fields[i]));
+      const rank = { ok: 0, warn: 1, crit: 2 };
+      let w = 0; res.forEach((r, i) => { if (rank[r[0]] > rank[res[w][0]]) w = i; });
+      const [level, dir] = res[w];
+
+      const label = { ok: "Within limit", warn: "Warning", crit: "Critical" }[level];
+      const shown = key === "bp" ? `${fmt(nums[0], 0)}/${fmt(nums[1], 0)}` : fmt(nums[0], p.dec);
+      const part = p.fields.length > 1 ? ` (${p.fields[w].label.split(" ")[0].toLowerCase()})` : "";
+      const f = p.fields[w];
+      const msg = level === "ok"
+        ? `Your ${p.name.toLowerCase()} is within the normal limit. No action needed.`
+        : `Your ${p.name.toLowerCase()}${part} is ${dir === "low" ? "below" : "above"} the normal range of ${fmt(f.n[0], p.dec)} – ${fmt(f.n[1], p.dec)} ${p.unit}. ${level === "crit" ? "This is outside the safe limit." : "It is close to the limit, so act early."}`;
+      const steps = level === "ok" ? p.ok : p[dir];
+
+      out.innerHTML = `<div class="head"><span class="chip ${level}"><i></i>${label}</span><span class="eb">${p.name}</span></div>
+        <div class="big">${shown}<span>${p.unit}</span></div>
+        <p class="msg">${msg}</p>
+        <div class="bars">${p.fields.map((ff, i) => bar(nums[i], ff, p, res[i][0])).join("")}</div>
+        ${level === "crit" ? `<div class="alert"><b>Critical.</b> Tell the medical team${key === "rad" ? " and mission control" : ""} now, and follow the steps below while you wait.</div>` : ""}
+        <h2>${level === "ok" ? "To keep it that way" : "What to do now"}</h2>
+        <ol>${steps.map(s => `<li>${s}</li>`).join("")}</ol>
+        <p class="note">General guidance for this simulation, not a medical diagnosis. If you feel unwell, contact the medical team whatever the number says.</p>`;
+    }
+
+    $("param").innerHTML = ORDER.map(k => `<option value="${k}">${P[k].name}</option>`).join("");
+    const h = location.hash.slice(1); if (P[h]) $("param").value = h;
+    function switchParam() {
+      clearTimeout(timer);
+      try { history.replaceState(null, "", "#" + $("param").value); } catch (e) { /* some browsers block this on file:// */ }
+      buildFields();
+      $("result").innerHTML = placeholder;
+    }
+    $("param").addEventListener("change", switchParam);
+    addEventListener("hashchange", () => { const k = location.hash.slice(1); if (P[k] && k !== $("param").value) { $("param").value = k; switchParam(); } });
+    $("form").addEventListener("submit", e => { e.preventDefault(); check(); });
+    buildFields();
+  </script>
+</body>
+
+</html>

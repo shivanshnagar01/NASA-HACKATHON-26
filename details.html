@@ -425,6 +425,10 @@
       margin: 10px 0 8px
     }
 
+   #enternumber:hover{
+    text-decoration: underline;
+   }
+
     .rec p {
       font-size: .88rem;
       line-height: 1.6;
@@ -512,7 +516,7 @@
           <circle cx="36" cy="36" r="14" />
           <ellipse cx="36" cy="38" rx="32" ry="10" transform="rotate(-25 36 38)" />
         </svg>AUHM</div>
-      <div class="meta-h"><span id="day"></span><span class="d" id="clock"></span><span class="on"><i></i>Online</span>
+      <div class="meta-h"><span id="enternumber">Check a reading</span><span id="day"></span><span class="d" id="clock"></span><span class="on"><i></i>Online</span>
       </div>
     </header>
     <div class="shell">
@@ -537,6 +541,11 @@
     </div>
   </div>
   <script>
+    const checkerbtn = document.getElementById("enternumber")
+
+    checkerbtn.addEventListener("click" , ()=>{
+      window.location.href = "check.html"
+    })
     const $ = id => document.getElementById(id);
     /* ===== EDIT HERE: one object per parameter. The whole page renders from this. ===== */
     const P = {
@@ -550,7 +559,7 @@
           ["report", "Report Irregular Rhythm", "Tell the medical team about palpitations, dizziness or chest discomfort."]]
       },
       bp: {
-        name: "Blood Pressure", tag: "Keep the pressure in balance", unit: "mmHg", dec: 0, lo: 90, hi: 130, min: 60, max: 160, step: 20, range: "90 – 130 mmHg (systolic)", fmt: v => Math.round(v) + "/" + Math.round(v * .66), recs: [
+        name: "Blood Pressure", tag: "Keep the pressure in balance", unit: "mmHg", dec: 0, lo: 90, hi: 130, min: 60, max: 160, step: 20, range: "90 – 130 mmHg (systolic)", fmt: (v, d) => Math.round(v) + (d == null ? "" : "/" + Math.round(d)), recs: [
           ["meal", "Watch Your Sodium", "Choose low-sodium meals; salt raises pressure and fluid retention."],
           ["water", "Stay Hydrated", "Steady fluid intake supports healthy blood volume."],
           ["run", "Exercise Regularly", "Resistance and cardio sessions help counter fluid shifts in space."],
@@ -635,22 +644,36 @@
     const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
     const RANGES = [["24H", 24], ["12H", 12], ["6H", 6]];
     const MISSION_START = Date.UTC(2026, 6, 8);
-    const S = { key: "bs", hours: 24, series: [], cur: null, prev: null, at: new Date(), fresh: false, g: null };
+    const S = { key: "bs", hours: 24, series: [], dia: [], cur: null, curDia: null, prev: null, at: new Date(), fresh: false, g: null, hovering: false };
+    let DATA = null;   // latest { readings, history, actDaily } from the shared simulation
+    const PREV = {};   // previous different value per parameter (for the Change / Trend row)
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-    const fv = v => {
+    const fv = (v, d) => {
       if (v === null || v === undefined || !Number.isFinite(v)) return "—";
       const p = P[S.key];
-      return p.fmt ? p.fmt(v) : v.toFixed(p.dec);
+      return p.fmt ? p.fmt(v, d) : v.toFixed(p.dec);
     };
     const hhmm = d => d.toISOString().slice(11, 16);
     const pct = (v, p) => clamp((v - p.min) / (p.max - p.min), 0, 1) * 100;
-    function build() {
-      // Readings will be supplied by the shared simulation module.
-      S.series = [];
-      S.cur = null;
-      S.prev = null;
-      S.at = new Date();
+    // 24 evenly spaced history points + the live reading = 25 points (matches the chart's time labels)
+    function windowSeries(arr, hours, live) {
+      const slice = arr.slice(-hours * 12), out = [];
+      for (let i = 0; i < 24; i++) out.push(slice[Math.floor(i * slice.length / 24)]);
+      out.push(live);
+      return out;
     }
+    function build() {
+      S.at = new Date();
+      if (!DATA) { S.series = []; S.dia = []; S.cur = null; S.curDia = null; S.prev = null; return; }
+      const r = DATA.readings, h = DATA.history, src = S.key === "bp" ? "bp_sys" : S.key;
+      S.cur = r[src];
+      S.curDia = S.key === "bp" ? r.bp_dia : null;
+      S.prev = PREV[src] ?? S.cur;
+      if (S.key === "act") { S.series = DATA.actDaily.concat(S.cur); S.dia = []; return; }
+      S.series = windowSeries(h[src], S.hours, S.cur);
+      S.dia = S.key === "bp" ? windowSeries(h.bp_dia, S.hours, r.bp_dia) : [];
+    }
+    function refresh() { build(); renderNow(); if (!S.hovering) renderChart(); renderRad(); }
     function status(v) { const p = P[S.key]; return v < p.lo ? ["Low", "low"] : v > p.hi ? ["High", "high"] : ["Normal", "ok"] }
     function renderNow() {
       const p = P[S.key];
@@ -667,7 +690,7 @@
       }
       const [st, cl] = status(S.cur), d = S.cur - (S.prev ?? S.cur), steady = Math.abs(d) <= (p.amp || 0) * .12;
       $("now").innerHTML = `<div class="eb">${p.name}</div>
-  <div class="v">${fv(S.cur)}<span class="u">${p.unit}</span></div>
+  <div class="v">${fv(S.cur, S.curDia)}<span class="u">${p.unit}</span></div>
   <div class="st ${cl}"><i></i>${st}<span>${p.tag}</span></div>
   <div class="rb"><div class="band" style="left:${pct(p.lo, p)}%;width:${pct(p.hi, p) - pct(p.lo, p)}%"></div><div class="mk" style="left:calc(${pct(S.cur, p)}% - 1px)"></div></div>
   <div class="rl"><span>${p.min}</span><span>Normal ${p.range}</span><span>${p.max}</span></div>
@@ -700,16 +723,16 @@
       }
     }
     function hover(e) {
-      const g = S.g; if (!g || !S.series.length) return; const p = P[S.key], r = $("chart").getBoundingClientRect();
+      const g = S.g; if (!g || !S.series.length) return; S.hovering = true; const p = P[S.key], r = $("chart").getBoundingClientRect();
       const vx = (e.clientX - r.left) / r.width * g.W, i = clamp(Math.round((vx - g.L) / ((g.W - g.L - g.Rr) / (g.n - 1))), 0, g.n - 1), v = S.series[i], cx = g.x(i), now = Date.now();
       const lab = p.daily ? (i == g.n - 1 ? "Today" : new Date(now - (g.n - 1 - i) * 864e5).toUTCString().slice(0, 3)) : hhmm(new Date(now - S.hours * 36e5 * (1 - i / (g.n - 1)))) + " UTC";
-      $("hv").innerHTML = `<line x1="${cx}" x2="${cx}" y1="${g.T}" y2="${g.H - g.B}" stroke="rgba(255,255,255,.25)"/><circle cx="${cx}" cy="${g.y(v)}" r="4" fill="#fff"/><text x="${cx > g.W / 2 ? cx - 10 : cx + 10}" y="${g.T + 10}" text-anchor="${cx > g.W / 2 ? "end" : "start"}" style="fill:#eef1f8;font-size:11.5px">${fv(v)} ${p.unit} · ${lab}</text>`;
+      $("hv").innerHTML = `<line x1="${cx}" x2="${cx}" y1="${g.T}" y2="${g.H - g.B}" stroke="rgba(255,255,255,.25)"/><circle cx="${cx}" cy="${g.y(v)}" r="4" fill="#fff"/><text x="${cx > g.W / 2 ? cx - 10 : cx + 10}" y="${g.T + 10}" text-anchor="${cx > g.W / 2 ? "end" : "start"}" style="fill:#eef1f8;font-size:11.5px">${fv(v, S.dia[i])} ${p.unit} · ${lab}</text>`;
     }
     function renderRad() {
       const p = P[S.key], el = $("rad");
       if (!p.rad || !Number.isFinite(S.cur)) { el.hidden = true; return }
-      const { pel, acc, dlim } = p.rad, day = [];
-      const d = day.reduce((a, b) => a + b, 0) / day.length * 24 / 1000, rem = pel - acc, days = d > 0 ? rem / d : Infinity;
+      const { pel, acc, dlim } = p.rad, day = (DATA && DATA.history.rad) || [];
+      const d = day.length ? day.reduce((a, b) => a + b, 0) / day.length * 24 / 1000 : 0, rem = pel - acc, days = d > 0 ? rem / d : Infinity;
       const cell = (l, v, u, s, h) => `<div class="cell${h ? " hl" : ""}"><small>${l}</small><b>${v}<em>${u}</em></b><p>${s}</p></div>`;
       el.hidden = false;
       el.innerHTML = `<div class="eb">Radiation budget</div>
@@ -737,7 +760,7 @@
     }
     $("range").addEventListener("click", e => { const h = e.target.dataset.h; if (!h) return; S.hours = +h; build(); setRange(); renderChart() });
     $("chart").addEventListener("pointermove", hover);
-    $("chart").addEventListener("pointerleave", () => { const h = $("hv"); if (h) h.innerHTML = "" });
+    $("chart").addEventListener("pointerleave", () => { S.hovering = false; const h = $("hv"); if (h) h.innerHTML = "" });
     addEventListener("hashchange", load);
     function clock() {
       const d = new Date(); $("day").textContent = "Mission Day " + (Math.floor((d - MISSION_START) / 864e5) + 1);
@@ -745,8 +768,18 @@
     }
     setInterval(clock, 1000); clock();
 
+    // Called by details.js with every update from the shared simulation
+    window.AUHM = {
+      feed(data) {
+        if (DATA) for (const k in data.readings) if (DATA.readings[k] !== data.readings[k]) PREV[k] = DATA.readings[k];
+        DATA = data;
+        refresh();
+      }
+    };
+
     load();
   </script>
+  <script type="module" src="details.js"></script>
 </body>
 
 </html>

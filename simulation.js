@@ -1,55 +1,17 @@
-const bpcard = document.getElementById("t-bp")
-const actcard = document.getElementById("t-act")
-const BpPlaceholderParent = bpcard.querySelector(".val")
-const ActPlaceholderParent = actcard.querySelector(".val")
-
-// const bodyif = document.querySelector("#bodyfigure")
-const bodyif = document.querySelector("path")
-
-const notificationcard = document.getElementById("notification")
-
-const radiationlevelscounter = document.getElementById("rad")
-
-let radiationlevelreading = radiationlevelscounter.innerText
-
-let applyToAll = false;
+export {
+    currentReadings,
+    slowReadings,
+    updateFastReadings,
+    updateActivityTime,
+    updateStress,
+    updateOxylevels,
+    setSimulationMode,
+    getSimulationMode,
+    getHealthStatus
+};
 
 
-let direction = "low"
 
-const directionController = document.getElementById("directioncontrol")
-const ParameterController = document.getElementById("parameterselector")
-const ModeController = document.getElementById("modeselector")
-
-let selectedDirection = directionController.value || "low";
-
-directionController.addEventListener("change", () => {
-  selectedDirection = directionController.value;
-});
-
-ParameterController.addEventListener("click", () => {
-  if(ParameterController.value === "all"){
-    applyToAll = true
-  }else(ParameterController.value !== "all")
-  {
-    applyToAll = false
-  }
-});
-
-BpPlaceholderParent.innerHTML = `
-  <div>
-    <b data-reading="bp_sys">-</b>
-    <b>/</b>
-    <b data-reading="bp_dia">-</b>
-    <span>mmHg</span>
-  </div>
-`
-ActPlaceholderParent.innerHTML = `
-  <div>
-    <b data-reading="act_time">-</b>
-    <span>min</span>
-  </div>
-`
 
 function createBoundedRandomGenerator(min, max, step, decimals = 0) {
   let previous = null;
@@ -173,7 +135,7 @@ function generateReading(parameter) {
   const scenario = scenarios[parameter];
 
   if (
-    (applyToAll || selectedParameter === parameter) &&
+    (selectedParameter === parameter) &&
     simulationMode !== "normal"
   ) {
     const ranges = scenario[simulationMode];
@@ -249,18 +211,7 @@ function renderReadings(readings) {
   }
 }
 
-function callNotification(start, param , end){
-  const textarea = document.getElementById("textarea")
 
-  textarea.innerText = start + param + end
-
-    notificationcard.classList.add("noti-acitve")
-    
-    setTimeout(() => {
-      notificationcard.classList.remove("noti-acitve")
-      notificationcard.style.opacity = 0
-    }, 3000); 
-}
 
 
 
@@ -306,15 +257,7 @@ setInterval(() => {
   renderReadings(readings)
 }, 1000);
 
-const allcards = document.querySelectorAll(".tile")
 
-allcards.forEach((card) => {
-  const readingplaceholder = card.querySelectorAll("b")
-  const awaitedtext = card.querySelector("em")
-  if (readingplaceholder.innerText != "-") {
-    awaitedtext.style.opacity = 0
-  }
-})
 
 
 const healthLimits = {
@@ -359,61 +302,173 @@ function getHealthStatus(readings) {
   console.log(healthyCount)
 }
 
-function rendercolor(count){
-   if(count < 10){
-    
-   }
-}
 
 getHealthStatus(currentReadings)
 
-ModeController.addEventListener("change", () => {
-  setSimulationMode(
-    ModeController.value,
-    ParameterController.value
-  );
-});
 
+const SHARE_STATE_KEY = "auhm-shared-readings-v1";
+const SHARE_HISTORY_KEY = "auhm-shared-history-v1";
+const SHARE_SAMPLE_MS = 5 * 60 * 1000;   // one history sample every 5 minutes
+const SHARE_HISTORY_LEN = 288;           // 288 x 5 min = 24 h
 
-ParameterController.addEventListener("change", () => {
-  setSimulationMode(
-    ModeController.value,
-    ParameterController.value
-  );
+const shareParams = Object.keys(generators);
+const shareDecimalParams = ["bt", "rad", "sh", "st"];
+const shareListeners = new Set();
 
-});
+const shareStore = {
+  read(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      return null;
+    }
+  },
+  write(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      // storage blocked or full: keep running without saving
+    }
+  }
+};
 
-if (ParameterController.value === "all") {
-  setSimulationMode(
-    ModeController.value,
-
-  )
+function shareRound(parameter, value) {
+  const factor = shareDecimalParams.includes(parameter) ? 10 : 1;
+  return Math.round(value * factor) / factor;
 }
 
-directionController.addEventListener("input", () => {
-  direction = directionController.value
-})
+// Limits used only to make up plausible history values
+function shareLimits(parameter) {
+  if (parameter === "bp_sys") return healthLimits.bp.sys;
+  if (parameter === "bp_dia") return healthLimits.bp.dia;
+  if (parameter === "act") return [90, 180];
+  return healthLimits[parameter];
+}
 
-document.addEventListener("DOMContentLoaded",()=>{
-  radiationlevelreading = radiationlevelscounter.innerText
-  console.log(bodyif)
-  
-  if(radiationlevelreading >= 25 ){
-    callNotification("The radiation levels are crossing the daily limit." , " Take Immediate steps, enetr the storm shelter")
-    
-    bodyif.style.fill = "red"
-    bodyif.style.stroke = "red"
-    
-    
-    // callNotification()
+// A gentle random walk inside the limits
+function shareWalk(parameter, start, count) {
+  const [low, high] = shareLimits(parameter);
+  const stepSize = (high - low) * 0.04;
+  const out = [];
+  let value = Number.isFinite(start) ? start : low + Math.random() * (high - low);
+
+  for (let i = 0; i < count; i++) {
+    value += (Math.random() * 2 - 1) * stepSize;
+    value = Math.min(high, Math.max(low, value));
+    out.push(shareRound(parameter, value));
   }
-  else if(radiationlevelreading >= 18 && radiationlevelreading <= 25){
-    // callNotification()
-    callNotification("The radiation levels are near the daily limit." , " Take precautions and be careful")
-    bodyif.style.fill = "yellow"
-    bodyif.style.stroke = "yellow"
+  return out;
+}
+
+let shareHistory = { data: {}, actDaily: [], last: Date.now() };
+
+function shareLoadHistory() {
+  const saved = shareStore.read(SHARE_HISTORY_KEY);
+  const usable =
+    saved &&
+    Array.isArray(saved.actDaily) &&
+    shareParams.every((p) => Array.isArray(saved.data && saved.data[p]));
+
+  if (usable) {
+    shareHistory = saved;
+
+    // The app was closed for a while: continue the history for the time that passed
+    const missed = Math.min(
+      SHARE_HISTORY_LEN,
+      Math.floor((Date.now() - saved.last) / SHARE_SAMPLE_MS)
+    );
+    if (missed > 0) {
+      shareParams.forEach((p) => {
+        const series = shareHistory.data[p];
+        const more = shareWalk(p, series[series.length - 1], missed);
+        shareHistory.data[p] = series.concat(more).slice(-SHARE_HISTORY_LEN);
+      });
+      shareHistory.last = Date.now();
+      shareStore.write(SHARE_HISTORY_KEY, shareHistory);
+    }
+    return;
   }
-  else{
-    notificationcard.style.opacity = 0
+
+  // First ever run: make up 24 h of history so the charts are not empty
+  shareParams.forEach((p) => {
+    shareHistory.data[p] = shareWalk(p, null, SHARE_HISTORY_LEN);
+  });
+  shareHistory.actDaily = shareWalk("act", null, 6);
+  shareHistory.last = Date.now();
+  shareStore.write(SHARE_HISTORY_KEY, shareHistory);
+}
+
+// Make each generator continue from a saved value instead of starting at a random one
+function shareSeedGenerator(parameter, target) {
+  for (let i = 0; i < 20000; i++) {
+    if (generators[parameter]() === target) return true;
   }
-})
+  return false;
+}
+
+function shareRestoreReadings() {
+  const saved = shareStore.read(SHARE_STATE_KEY);
+  if (!saved || !saved.readings) return;
+
+  shareParams.forEach((p) => {
+    const value = saved.readings[p];
+    if (!Number.isFinite(value)) return;
+    shareSeedGenerator(p, value);
+    currentReadings[p] = value;
+  });
+
+  if (Number.isFinite(saved.readings.act_time)) {
+    activity.activeMinutes = saved.readings.act_time;
+    currentReadings.act_time = saved.readings.act_time;
+  }
+
+  renderReadings(currentReadings);
+}
+
+function shareSnapshot() {
+  return { readings: { ...currentReadings } };
+}
+
+export function subscribe(listener) {
+  shareListeners.add(listener);
+  listener(shareSnapshot());
+  return () => shareListeners.delete(listener);
+}
+
+export function getHistory() {
+  return { history: shareHistory.data, actDaily: shareHistory.actDaily };
+}
+
+let shareLastJSON = "";
+
+function shareTick() {
+  const json = JSON.stringify(currentReadings);
+
+  if (json !== shareLastJSON) {
+    shareLastJSON = json;
+    shareStore.write(SHARE_STATE_KEY, { readings: currentReadings, ts: Date.now() });
+
+    const snapshot = shareSnapshot();
+    shareListeners.forEach((listener) => {
+      try {
+        listener(snapshot);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }
+
+  if (Date.now() - shareHistory.last >= SHARE_SAMPLE_MS) {
+    shareParams.forEach((p) => {
+      shareHistory.data[p].push(currentReadings[p]);
+      if (shareHistory.data[p].length > SHARE_HISTORY_LEN) shareHistory.data[p].shift();
+    });
+    shareHistory.last = Date.now();
+    shareStore.write(SHARE_HISTORY_KEY, shareHistory);
+  }
+}
+
+shareLoadHistory();
+shareRestoreReadings();
+setInterval(shareTick, 250);
