@@ -111,28 +111,29 @@ subscribe(({ readings }) => {
       bodyif.style.stroke = "red";
     }
     document.body.style.backgroundColor = "rgb(23, 4, 4)";
-
+    
     document.querySelectorAll(".tile").forEach(tile => {
-      tile.style.backgroundColor = "rgb(49, 6, 6)";
+        tile.style.backgroundColor = "rgb(49, 6, 6)";
     });
-  } 
-  else if (radiationValue >= 18 && radiationValue < 21) {
+} 
+else if (radiationValue >= 18 && radiationValue < 21) {
     callNotification("The radiation levels are near the daily limit.", " Take precautions and be careful.", "");
     if (bodyif) {
-      bodyif.style.fill = "yellow";
-      bodyif.style.stroke = "yellow";
+        bodyif.style.fill = "yellow";
+        bodyif.style.stroke = "yellow";
     }
-  } 
-  else if (radiationValue >= 21 && radiationValue < 25) {
+} 
+else if (radiationValue >= 21 && radiationValue < 25) {
     callNotification("The radiation levels are near the daily limit.", " Take precautions and be careful.", "");
     if (bodyif) {
-      bodyif.style.fill = "rgb(255, 159, 159)";
-      bodyif.style.stroke = "rgb(255, 192, 192)";
+        bodyif.style.fill = "rgb(255, 159, 159)";
+        bodyif.style.stroke = "rgb(255, 192, 192)";
     }
-  } 
-  else {
+} 
+else {
     if (notificationcard) {
-      notificationcard.style.opacity = 0;
+        notificationcard.style.opacity = 0;
     }
+    document.body.style.background = "radial-gradient(900px 480px at 85% -10%, rgba(80, 120, 255, .10)";
   }
 });
