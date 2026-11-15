@@ -72,33 +72,32 @@ function callNotification(start, param, end){
   }, 3000); 
 }
 
-ModeController.addEventListener("change", () => {
-  setSimulationMode(
-    ModeController.value,
-    ParameterController.value
-  );
-});
-
-
-ParameterController.addEventListener("change", () => {
-  setSimulationMode(
-    ModeController.value,
-    ParameterController.value
-  );
-
+// ModeController.addEventListener("change", () => {
+//   setSimulationMode(
+//     ModeController.value,
+//     ParameterController.value
+//   );
 // });
 
-if (ParameterController.value === "all") {
-  setSimulationMode(
-    ModeController.value,
 
-  )
-}
+// ParameterController.addEventListener("change", () => {
+//   setSimulationMode(
+//     ModeController.value,
+//     ParameterController.value
+//   );
 
-directionController.addEventListener("input", () => {
-  direction = directionController.value
-})
-})
+// // });
+
+// if (ParameterController.value === "all") {
+//   setSimulationMode(
+//     ModeController.value,
+
+//   )
+// }
+
+// directionController.addEventListener("input", () => {
+//   direction = directionController.value
+// })
 
 import { subscribe } from "./simulation.js";
 

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AUHM</title>
     <style>
+
         :root {
             --bg: #070a12;
             --sf: #0b101c;
@@ -32,6 +33,10 @@
             -webkit-font-smoothing: antialiased;
             min-height: 100vh
         }
+
+        ::-webkit-scrollbar{
+            display:none;
+    }
 
         .app {
             max-width: 1280px;
@@ -187,7 +192,6 @@
             border-color: rgba(155, 188, 255, .4);
             transform: translateY(-2px);
             background: #0d1424
-            
         }
 
         .tile:focus-visible {
@@ -281,16 +285,16 @@
         /* #mode {
             scale: 0.5;
         } */
-        
-        select{
+
+        select {
             top: 0;
             position: fixed;
             scale: 0.4;
         }
 
-        #notification{
+        #notification {
             height: auto;
-            padding: 20px 20px ;
+            padding: 20px 20px;
             background-color: #14223f;
             border-radius: 10px;
             border: 4px solid #0b2760;
@@ -302,13 +306,13 @@
             /* opacity: 0; */
             transition: 0.5s;
         }
-        
-         .noti-active{
+
+        .noti-active {
             transition: 0.5s;
             opacity: 1;
         }
 
-        #eyebrow div{
+        #eyebrow div {
             font-size: 20px;
             font-weight: 700;
         }
@@ -332,7 +336,7 @@
 
             .grid {
                 grid-template-columns: 1fr 1fr;
-background-color: rgb(83, 13, 13);
+                background-color: rgb(83, 13, 13);
                 gap: 12px
             }
 
@@ -364,7 +368,7 @@ background-color: rgb(83, 13, 13);
 </head>
 
 <body>
-     <div id="notification" class="noti">
+    <div id="notification" class="noti">
         <div id="eyebrow">
             <div>&bullet; ALERT</div>
         </div>
@@ -376,7 +380,7 @@ background-color: rgb(83, 13, 13);
         <option value="high">high</option>
     </select> -->
     <!-- <label for="parameterselector">Parameter</label> -->
-    <select id="parameterselector">
+    <!-- <select id="parameterselector">
         <option value="hr">Heart rate</option>
         <option value="bp">Blood Pressure</option>
         <option value="bs">Blood sugar</option>
@@ -386,12 +390,12 @@ background-color: rgb(83, 13, 13);
         <option value="all">ALL</option>
     
     </select>
-    <!-- <label for="mode">Mode</label> -->
+    <label for="mode">Mode</label>
     <select id="modeselector">
         <option value="normal">Normal</option>
         <option value="warning">Warning</option>
         <option value="critical">Critical</option>
-    </select> 
+    </select>  -->
     <div class="app">
         <header>
             <div class="mark"><svg width="24" height="24" viewBox="0 0 72 72" fill="none" stroke="#9bbcff"
@@ -419,9 +423,9 @@ background-color: rgb(83, 13, 13);
         <div class="eb">Parameters</div>
         <main class="grid" id="grid"></main>
     </div>
-    <script>
+    <script type="module">
         const $ = id => document.getElementById(id);
-        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "µSv/h", "dec": 1, "lo": 0, "hi": 41.7, "min": 0, "max": 60, "step": 15, "range": "below 41.7 µSv/h" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
+        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "mSv/h", "dec": 1, "lo": 0, "hi": 23, "min": 0, "max": 60, "step": 15, "range": "below 41.7 µSv/h" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
         P.bp.fmt = v => Math.round(v) + "/" + Math.round(v * .66);
         const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
         const MISSION_START = Date.UTC(2026, 6, 8);
@@ -457,40 +461,42 @@ background-color: rgb(83, 13, 13);
 
             ORDER.forEach(k => {
                 const t = $("t-" + k);
-                const value = S[k].cur;
-                const hasReading = Number.isFinite(value);
+                const valElem = t.querySelector("b");
+                const textVal = valElem ? valElem.textContent.trim() : "—";
+                const hasReading = textVal !== "—";
 
                 t.className = "tile";
-                t.querySelector("b").textContent =
-                    hasReading ? fv(k, value) : "—";
-
-                t.querySelector("em").textContent =
-                    hasReading ? stat(k, value)[0] : "Awaiting data";
-
-                t.querySelector("polyline").setAttribute("points", spark(k));
 
                 if (hasReading) {
                     available++;
+                    // Parse the current number from the DOM element text
+                    const value = parseFloat(textVal);
 
-                    if (stat(k, value)[1] !== "ok") {
-                        bad++;
+                    // Check if it's out of bounds based on P limits
+                    const p = P[k];
+                    let statusClass = "ok";
+                    if (Number.isFinite(value)) {
+                        if (value < p.lo) { statusClass = "low"; bad++; }
+                        else if (value > p.hi) { statusClass = "high"; bad++; }
                     }
 
-                    t.classList.add(stat(k, value)[1]);
+                    t.querySelector("em").textContent = statText(k, value);
+                    t.classList.add(statusClass);
+                } else {
+                    t.querySelector("em").textContent = "Awaiting data";
                 }
             });
 
             const healthyCount = available - bad;
-
-            const col = available === ORDER.length
-                ? getBodyColor(healthyCount)
-                : "#7d879f";
+            const col = available === ORDER.length ? getBodyColor(healthyCount) : "#7d879f";
 
             // Update body colour
             const body = $("bodyfigure").querySelector("path");
-            body.style.fill = col;
-            body.style.fillOpacity = "0.35";
-            body.style.stroke = col;
+            if (body) {
+                body.style.fill = col;
+                body.style.fillOpacity = "0.35";
+                body.style.stroke = col;
+            }
 
             $("cap").textContent = available
                 ? `${healthyCount} / ${ORDER.length} within limits`
@@ -505,16 +511,33 @@ background-color: rgb(83, 13, 13);
                 : `<i></i>Awaiting readings<span>Simulation data not connected</span>`;
         }
 
+        // Helper text for status
+        function statText(k, v) {
+            const p = P[k];
+            if (v < p.lo) return "Low";
+            if (v > p.hi) return "High";
+            return "Normal";
+        }
+
         function clock() {
             const d = new Date(); $("day").textContent = "Mission Day " + (Math.floor((d - MISSION_START) / 864e5) + 1);
             $("clock").textContent = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }) + " · " + d.toISOString().slice(11, 16) + " UTC"
         }
-        setInterval(clock, 1000); clock(); 
+        setInterval(clock, 1000); clock();
+
+        import { subscribe } from "./simulation.js";
+
+        subscribe(({ readings }) => {
+            // Update your local state or call paint() if it's in scope
+            if (typeof paint === "function") {
+                paint();
+            }
+        });
 
     </script>
 
-<script type="module" src="simulation.js"></script>
-<script type="module" src="main.js"></script>
+    <script type="module" src="simulation.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 
 </html>

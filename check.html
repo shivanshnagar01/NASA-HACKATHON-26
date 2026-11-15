@@ -30,6 +30,10 @@
       min-height: 100vh
     }
 
+     ::-webkit-scrollbar{
+            display:none;
+    }
+
     .app { max-width: 1100px; margin: 0 auto; padding: 26px 32px 72px }
 
     header { display: flex; align-items: center; justify-content: space-between; gap: 16px }
@@ -212,7 +216,7 @@
       },
       rad: {
         name: "Radiation", unit: "mSv/h", dec: 1,
-        fields: [{ label: "Radiation", n: [0, 18], critLow: -Infinity, critHigh: 25, abs: [0, 100], show: [0, 40] }],
+        fields: [{ label: "Radiation", n: [0, 18], critLow: -Infinity, critHigh: 22, abs: [0, 100], show: [0, 35] }],
         ok: ["Keep your dosimeter on you at all times.", "Know the way to your storm shelter."],
         low: ["Nothing to do; a lower dose is better."],
         high: ["Move to the shielded storm shelter straight away.", "Limit time in lightly shielded modules.", "Check that your dosimeter is working and on you.", "Report the reading to mission control and wait for their all-clear."]
