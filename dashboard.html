@@ -541,7 +541,7 @@
     /* ===== EDIT HERE: one object per parameter. The whole page renders from this. ===== */
     const P = {
       hr: {
-        name: "Heart Rate", tag: "Keep your rhythm steady", unit: "bpm", dec: 0, base: 70, amp: 8, lo: 60, hi: 100, min: 40, max: 140, step: 20, range: "60 – 100 bpm", recs: [
+        name: "Heart Rate", tag: "Keep your rhythm steady", unit: "bpm", dec: 0, lo: 60, hi: 100, min: 40, max: 140, step: 20, range: "60 – 100 bpm", recs: [
           ["calm", "Practise Calm Breathing", "Slow, deep breaths help bring a raised heart rate back to baseline."],
           ["run", "Exercise Regularly", "Short daily cardio sessions keep the heart strong in microgravity."],
           ["water", "Stay Hydrated", "Dehydration makes the heart work harder. Drink at set intervals."],
@@ -550,7 +550,7 @@
           ["report", "Report Irregular Rhythm", "Tell the medical team about palpitations, dizziness or chest discomfort."]]
       },
       bp: {
-        name: "Blood Pressure", tag: "Keep the pressure in balance", unit: "mmHg", dec: 0, base: 116, amp: 6, lo: 90, hi: 130, min: 60, max: 160, step: 20, range: "90 – 130 mmHg (systolic)", fmt: v => Math.round(v) + "/" + Math.round(v * .66), recs: [
+        name: "Blood Pressure", tag: "Keep the pressure in balance", unit: "mmHg", dec: 0, lo: 90, hi: 130, min: 60, max: 160, step: 20, range: "90 – 130 mmHg (systolic)", fmt: v => Math.round(v) + "/" + Math.round(v * .66), recs: [
           ["meal", "Watch Your Sodium", "Choose low-sodium meals; salt raises pressure and fluid retention."],
           ["water", "Stay Hydrated", "Steady fluid intake supports healthy blood volume."],
           ["run", "Exercise Regularly", "Resistance and cardio sessions help counter fluid shifts in space."],
@@ -559,7 +559,7 @@
           ["report", "Report Sudden Changes", "Inform the medical team about headaches, blurred vision or dizziness."]]
       },
       bs: {
-        name: "Blood Sugar", tag: "Keep your energy in balance", unit: "mg/dL", dec: 0, base: 102, amp: 14, lo: 70, hi: 140, min: 0, max: 250, step: 50, range: "70 – 140 mg/dL", recs: [
+        name: "Blood Sugar", tag: "Keep your energy in balance", unit: "mg/dL", dec: 0, lo: 70, hi: 140, min: 0, max: 250, step: 50, range: "70 – 140 mg/dL", recs: [
           ["meal", "Follow Meal Schedule", "Maintain a consistent meal timing to keep blood sugar levels stable."],
           ["water", "Stay Hydrated", "Drink enough water to support metabolism and overall health in microgravity."],
           ["run", "Exercise Regularly", "Daily physical activity helps regulate blood sugar and improves insulin sensitivity."],
@@ -568,7 +568,7 @@
           ["report", "Report Sudden Changes", "Inform the medical team if you notice unusually high or low blood sugar levels."]]
       },
       bt: {
-        name: "Body Temperature", tag: "Stay in your comfort zone", unit: "°C", dec: 1, base: 36.7, amp: .3, lo: 36.1, hi: 37.5, min: 35, max: 39, step: 1, range: "36.1 – 37.5 °C", recs: [
+        name: "Body Temperature", tag: "Stay in your comfort zone", unit: "°C", dec: 1, lo: 36.1, hi: 37.5, min: 35, max: 39, step: 1, range: "36.1 – 37.5 °C", recs: [
           ["water", "Stay Hydrated", "Fluids help the body regulate heat when cooling is limited."],
           ["temp", "Check Suit Cooling", "Adjust cooling settings so you stay comfortable during activity."],
           ["meal", "Eat Regularly", "Steady meals support a stable core temperature."],
@@ -577,7 +577,7 @@
           ["report", "Report Fever or Chills", "Inform the medical team if your temperature leaves the normal range."]]
       },
       sh: {
-        name: "Daily Sleep Hours", tag: "Rest to perform at your best", unit: "hrs", dec: 1, base: 7.3, amp: .8, lo: 7, hi: 9, min: 0, max: 12, step: 3, range: "7 – 9 hrs", daily: 1, recs: [
+        name: "Daily Sleep Hours", tag: "Rest to perform at your best", unit: "hrs", dec: 1, lo: 7, hi: 9, min: 0, max: 12, step: 3, range: "7 – 9 hrs", daily: 1, recs: [
           ["sleep", "Keep a Fixed Schedule", "Go to bed and wake up at the same time to stay in sync with mission time."],
           ["calm", "Wind Down Early", "Dim lights and avoid screens for 30 minutes before sleep."],
           ["meal", "Mind Late Meals", "Avoid heavy meals and caffeine close to bedtime."],
@@ -586,7 +586,7 @@
           ["report", "Report Poor Sleep", "Tell the medical team if you sleep under 6 hours for several days."]]
       },
       sq: {
-        name: "Sleep Quality", tag: "Wake up recovered", unit: "%", dec: 0, base: 82, amp: 8, lo: 70, hi: 100, min: 0, max: 100, step: 25, range: "70 – 100 %", daily: 1, recs: [
+        name: "Sleep Quality", tag: "Wake up recovered", unit: "%", dec: 0, lo: 70, hi: 100, min: 0, max: 100, step: 25, range: "70 – 100 %", daily: 1, recs: [
           ["sleep", "Consistent Bedtime", "A regular routine improves deep and REM sleep."],
           ["calm", "Relax Before Bed", "Try breathing exercises or light stretching."],
           ["water", "Limit Evening Fluids", "Fewer night-time interruptions mean more restful sleep."],
@@ -595,7 +595,7 @@
           ["report", "Report Restless Nights", "Inform the medical team if poor quality continues."]]
       },
       st: {
-        name: "Stress Level", tag: "Stay calm and focused", unit: "/ 10", dec: 1, base: 3.2, amp: 1.4, lo: 0, hi: 6, min: 0, max: 10, step: 2, range: "0 – 6 / 10", recs: [
+        name: "Stress Level", tag: "Stay calm and focused", unit: "/ 10", dec: 1, lo: 0, hi: 6, min: 0, max: 10, step: 2, range: "0 – 6 / 10", recs: [
           ["calm", "Breathe and Reset", "Take a few slow breaths between tasks to lower tension."],
           ["run", "Move Your Body", "Exercise releases tension and lifts your mood."],
           ["heart", "Stay Connected", "Schedule regular calls with family and friends."],
@@ -607,7 +607,7 @@
 
     Object.assign(P, {
       rad: {
-        name: "Radiation", tag: "Dose rate, measured continuously", unit: "µSv/h", dec: 1, base: 26, amp: 6, lo: 0, hi: 41.7, min: 0, max: 60, step: 15, range: "below 41.7 µSv/h",
+        name: "Radiation", tag: "Dose rate, measured continuously", unit: "µSv/h", dec: 1, lo: 0, hi: 41.7, min: 0, max: 60, step: 15, range: "below 41.7 µSv/h",
         rad: { pel: 600, acc: 128.4, dlim: 1 }, recs: [
           [0, "Know Your Storm Shelter", "During a solar particle event, move to the shielded area straight away."],
           [0, "Limit Time in High-Dose Areas", "Plan work in lightly shielded modules for the shortest time needed."],
@@ -617,14 +617,14 @@
           [0, "Report Dosimeter Alerts", "Tell mission control at once if a sensor shows an unexpected spike."]]
       },
       ox: {
-        name: "Oxygen Level", tag: "Blood oxygen saturation", unit: "%", dec: 0, base: 97, amp: 1.2, lo: 95, hi: 100, min: 90, max: 100, step: 2, range: "95 – 100 %", recs: [
+        name: "Oxygen Level", tag: "Blood oxygen saturation", unit: "%", dec: 0, lo: 95, hi: 100, min: 90, max: 100, step: 2, range: "95 – 100 %", recs: [
           [0, "Check Cabin Air", "Confirm oxygen and CO₂ readings are within the normal range."],
           [0, "Breathe Deeply", "Slow, full breaths improve oxygen uptake after exercise."],
           [0, "Warm Up Before Activity", "Build effort gradually so oxygen demand rises smoothly."],
           [0, "Report Breathlessness", "Tell the medical team about shortness of breath or dizziness."]]
       },
       act: {
-        name: "Activity", tag: "Minutes of exercise per day", unit: "min", dec: 0, base: 105, amp: 25, lo: 90, hi: 180, min: 0, max: 240, step: 60, range: "90 – 180 min per day", daily: 1, recs: [
+        name: "Activity", tag: "Minutes of exercise per day", unit: "min", dec: 0, lo: 90, hi: 180, min: 0, max: 240, step: 60, range: "90 – 180 min per day", daily: 1, recs: [
           [0, "Train Every Day", "Resistance and cardio sessions protect bone and muscle in microgravity."],
           [0, "Split Your Sessions", "Two shorter blocks are easier to keep consistent than one long one."],
           [0, "Warm Up and Cool Down", "Five minutes each side reduces strain and speeds recovery."],
@@ -635,24 +635,37 @@
     const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
     const RANGES = [["24H", 24], ["12H", 12], ["6H", 6]];
     const MISSION_START = Date.UTC(2026, 6, 8);
-    const rng = s => { let a = 0; for (const c of s) a = Math.imul(a ^ c.charCodeAt(0), 16777619); return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } };
-    const S = { key: "bs", hours: 24, series: [], cur: 0, prev: 0, at: new Date(), fresh: false, g: null };
+    const S = { key: "bs", hours: 24, series: [], cur: null, prev: null, at: new Date(), fresh: false, g: null };
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-    const fv = v => { const p = P[S.key]; return p.fmt ? p.fmt(v) : v.toFixed(p.dec) };
+    const fv = v => {
+      if (v === null || v === undefined || !Number.isFinite(v)) return "—";
+      const p = P[S.key];
+      return p.fmt ? p.fmt(v) : v.toFixed(p.dec);
+    };
     const hhmm = d => d.toISOString().slice(11, 16);
     const pct = (v, p) => clamp((v - p.min) / (p.max - p.min), 0, 1) * 100;
-    function mk(key, hours) {
-      const p = P[key], n = p.daily ? 7 : 25, r = rng(key + (p.daily ? 7 : hours)), ph = r() * 6, f = p.daily ? 2 : hours === 6 ? .6 : hours === 12 ? 1.1 : 1.8;
-      return Array.from({ length: n }, (_, i) => clamp(p.base + p.amp * (Math.sin(i / n * 6.28 * f + ph) * .7 + (r() - .5) * .5), p.min, p.max));
-    }
     function build() {
-      S.series = mk(S.key, S.hours); const n = S.series.length;
-      if (!S.fresh) { S.cur = S.series[n - 1]; S.prev = S.series[n - 2] }
-      S.series[n - 1] = S.cur;
+      // Readings will be supplied by the shared simulation module.
+      S.series = [];
+      S.cur = null;
+      S.prev = null;
+      S.at = new Date();
     }
     function status(v) { const p = P[S.key]; return v < p.lo ? ["Low", "low"] : v > p.hi ? ["High", "high"] : ["Normal", "ok"] }
     function renderNow() {
-      const p = P[S.key], [st, cl] = status(S.cur), d = S.cur - S.prev, steady = Math.abs(d) <= p.amp * .12;
+      const p = P[S.key];
+      if (S.cur === null || S.cur === undefined || !Number.isFinite(S.cur)) {
+        $("now").innerHTML = `<div class="eb">${p.name}</div>
+  <div class="v">—<span class="u">${p.unit}</span></div>
+  <div class="st"><i></i>Awaiting readings<span>Simulation data not connected</span></div>
+  <div class="rb"></div>
+  <div class="rl"><span>${p.min}</span><span>Normal ${p.range}</span><span>${p.max}</span></div>
+  <div class="meta"><div><small>Last reading</small><b>—</b></div>
+  <div><small>Change</small><b>—</b></div>
+  <div><small>Trend</small><b>—</b></div></div>`;
+        return;
+      }
+      const [st, cl] = status(S.cur), d = S.cur - (S.prev ?? S.cur), steady = Math.abs(d) <= (p.amp || 0) * .12;
       $("now").innerHTML = `<div class="eb">${p.name}</div>
   <div class="v">${fv(S.cur)}<span class="u">${p.unit}</span></div>
   <div class="st ${cl}"><i></i>${st}<span>${p.tag}</span></div>
@@ -664,7 +677,7 @@
     }
     function renderChart() {
       const p = P[S.key], n = S.series.length, W = 640, H = 280, L = 40, Rr = 12, T = 14, B = 26;
-      const x = i => L + i * (W - L - Rr) / (n - 1), y = v => T + (H - T - B) * (1 - (clamp(v, p.min, p.max) - p.min) / (p.max - p.min));
+      const x = i => L + (n > 1 ? i * (W - L - Rr) / (n - 1) : 0), y = v => T + (H - T - B) * (1 - (clamp(v, p.min, p.max) - p.min) / (p.max - p.min));
       S.g = { x, y, n, W, L, Rr, T, H, B };
       let g = "";
       for (let v = p.min; v <= p.max + 1e-9; v += p.step)g += `<line x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(255,255,255,.05)"/><text x="${L - 10}" y="${y(v) + 3.5}" text-anchor="end">${+v.toFixed(1)}</text>`;
@@ -673,25 +686,29 @@
       if (p.daily) for (let i = 0; i < n; i++)xl += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${i == n - 1 ? "Today" : new Date(now - (n - 1 - i) * 864e5).toUTCString().slice(0, 3)}</text>`;
       else for (let i = 0; i <= 24; i += 6)xl += `<text x="${x(i)}" y="${H - 6}" text-anchor="${i ? i == 24 ? "end" : "middle" : "start"}">${hhmm(new Date(now - S.hours * 36e5 * (1 - i / 24)))}</text>`;
       const lim = p.hi < p.max ? `<line x1="${L}" x2="${W - Rr}" y1="${y(p.hi)}" y2="${y(p.hi)}" stroke="var(--high)" stroke-opacity=".55" stroke-dasharray="3 5"/><text x="${W - Rr}" y="${y(p.hi) - 6}" text-anchor="end" style="fill:var(--high);fill-opacity:.8">limit</text>` : "";
-      const lx = x(n - 1), ly = y(S.cur);
+      const hasReadings = n > 0 && S.series.every(Number.isFinite);
+      const lx = hasReadings ? x(n - 1) : L, ly = hasReadings && Number.isFinite(S.cur) ? y(S.cur) : H - B;
       $("chart").setAttribute("aria-label", `${p.name} history`);
       $("chart").innerHTML = `<defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9bbcff" stop-opacity=".22"/><stop offset="1" stop-color="#9bbcff" stop-opacity="0"/></linearGradient></defs>
   <rect x="${L}" y="${y(Math.min(p.hi, p.max))}" width="${W - L - Rr}" height="${Math.max(0, y(Math.max(p.lo, p.min)) - y(Math.min(p.hi, p.max)))}" fill="rgba(155,188,255,.05)"/>${g}${lim}
-  <polygon points="${x(0)},${H - B} ${pts} ${lx},${H - B}" fill="url(#ag)"/><polyline points="${pts}" fill="none" stroke="#9bbcff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
-  <circle cx="${lx}" cy="${ly}" r="7" fill="#9bbcff" fill-opacity=".18"/><circle cx="${lx}" cy="${ly}" r="3" fill="#fff"/>${xl}<g id="hv"></g>`;
-      const avg = S.series.reduce((a, b) => a + b, 0) / n, mx = Math.max(...S.series), mn = Math.min(...S.series);
-      $("stats").innerHTML = [["Average", avg], ["Maximum", mx], ["Minimum", mn]].map(a => `<div><small>${a[0]}</small><b>${fv(a[1])} ${p.unit}</b></div>`).join("");
+  ${hasReadings ? `<polygon points="${x(0)},${H - B} ${pts} ${lx},${H - B}" fill="url(#ag)"/><polyline points="${pts}" fill="none" stroke="#9bbcff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>${Number.isFinite(S.cur) ? `<circle cx="${lx}" cy="${ly}" r="7" fill="#9bbcff" fill-opacity=".18"/><circle cx="${lx}" cy="${ly}" r="3" fill="#fff"/>` : ""}` : `<text x="${W / 2}" y="${H / 2}" text-anchor="middle">Awaiting readings</text>`}${xl}<g id="hv"></g>`;
+      if (hasReadings) {
+        const avg = S.series.reduce((a, b) => a + b, 0) / n, mx = Math.max(...S.series), mn = Math.min(...S.series);
+        $("stats").innerHTML = [["Average", avg], ["Maximum", mx], ["Minimum", mn]].map(a => `<div><small>${a[0]}</small><b>${fv(a[1])} ${p.unit}</b></div>`).join("");
+      } else {
+        $("stats").innerHTML = ["Average", "Maximum", "Minimum"].map(label => `<div><small>${label}</small><b>—</b></div>`).join("");
+      }
     }
     function hover(e) {
-      const g = S.g; if (!g) return; const p = P[S.key], r = $("chart").getBoundingClientRect();
+      const g = S.g; if (!g || !S.series.length) return; const p = P[S.key], r = $("chart").getBoundingClientRect();
       const vx = (e.clientX - r.left) / r.width * g.W, i = clamp(Math.round((vx - g.L) / ((g.W - g.L - g.Rr) / (g.n - 1))), 0, g.n - 1), v = S.series[i], cx = g.x(i), now = Date.now();
       const lab = p.daily ? (i == g.n - 1 ? "Today" : new Date(now - (g.n - 1 - i) * 864e5).toUTCString().slice(0, 3)) : hhmm(new Date(now - S.hours * 36e5 * (1 - i / (g.n - 1)))) + " UTC";
       $("hv").innerHTML = `<line x1="${cx}" x2="${cx}" y1="${g.T}" y2="${g.H - g.B}" stroke="rgba(255,255,255,.25)"/><circle cx="${cx}" cy="${g.y(v)}" r="4" fill="#fff"/><text x="${cx > g.W / 2 ? cx - 10 : cx + 10}" y="${g.T + 10}" text-anchor="${cx > g.W / 2 ? "end" : "start"}" style="fill:#eef1f8;font-size:11.5px">${fv(v)} ${p.unit} · ${lab}</text>`;
     }
     function renderRad() {
       const p = P[S.key], el = $("rad");
-      if (!p.rad) { el.hidden = true; return }
-      const { pel, acc, dlim } = p.rad, day = mk(S.key, 24); day[day.length - 1] = S.cur;
+      if (!p.rad || !Number.isFinite(S.cur)) { el.hidden = true; return }
+      const { pel, acc, dlim } = p.rad, day = [];
       const d = day.reduce((a, b) => a + b, 0) / day.length * 24 / 1000, rem = pel - acc, days = d > 0 ? rem / d : Infinity;
       const cell = (l, v, u, s, h) => `<div class="cell${h ? " hl" : ""}"><small>${l}</small><b>${v}<em>${u}</em></b><p>${s}</p></div>`;
       el.hidden = false;
@@ -727,7 +744,7 @@
       $("clock").textContent = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }) + " · " + hhmm(d) + " UTC"
     }
     setInterval(clock, 1000); clock();
-    setInterval(() => { const p = P[S.key]; S.prev = S.cur; S.cur = clamp(S.cur + (Math.random() - .5) * p.amp * .35, p.min, p.max); S.at = new Date(); S.series[S.series.length - 1] = S.cur; renderNow(); renderChart(); renderRad() }, 5000);
+
     load();
   </script>
 </body>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Orbital Care</title>
+    <title>AUHM</title>
     <style>
         :root {
             --bg: #070a12;
@@ -355,49 +355,69 @@
     </div>
     <script>
         const $ = id => document.getElementById(id);
-        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "base": 70, "amp": 8, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "base": 116, "amp": 6, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "base": 102, "amp": 14, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "base": 36.7, "amp": 0.3, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Daily Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "base": 7.3, "amp": 0.8, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "base": 82, "amp": 8, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "base": 3.2, "amp": 1.4, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "µSv/h", "dec": 1, "base": 26, "amp": 6, "lo": 0, "hi": 41.7, "min": 0, "max": 60, "step": 15, "range": "below 41.7 µSv/h" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "base": 97, "amp": 1.2, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "base": 105, "amp": 25, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
+        const P = { "hr": { "name": "Heart Rate", "tag": "Keep your rhythm steady", "unit": "bpm", "dec": 0, "lo": 60, "hi": 100, "min": 40, "max": 140, "step": 20, "range": "60 – 100 bpm" }, "bp": { "name": "Blood Pressure", "tag": "Keep the pressure in balance", "unit": "mmHg", "dec": 0, "lo": 90, "hi": 130, "min": 60, "max": 160, "step": 20, "range": "90 – 130 mmHg (systolic)" }, "bs": { "name": "Blood Sugar", "tag": "Keep your energy in balance", "unit": "mg/dL", "dec": 0, "lo": 70, "hi": 140, "min": 0, "max": 250, "step": 50, "range": "70 – 140 mg/dL" }, "bt": { "name": "Body Temperature", "tag": "Stay in your comfort zone", "unit": "°C", "dec": 1, "lo": 36.1, "hi": 37.5, "min": 35, "max": 39, "step": 1, "range": "36.1 – 37.5 °C" }, "sh": { "name": "Daily Sleep Hours", "tag": "Rest to perform at your best", "unit": "hrs", "dec": 1, "lo": 7, "hi": 9, "min": 0, "max": 12, "step": 3, "range": "7 – 9 hrs", "daily": 1 }, "sq": { "name": "Sleep Quality", "tag": "Wake up recovered", "unit": "%", "dec": 0, "lo": 70, "hi": 100, "min": 0, "max": 100, "step": 25, "range": "70 – 100 %", "daily": 1 }, "st": { "name": "Stress Level", "tag": "Stay calm and focused", "unit": "/ 10", "dec": 1, "lo": 0, "hi": 6, "min": 0, "max": 10, "step": 2, "range": "0 – 6 / 10" }, "rad": { "name": "Radiation", "tag": "Dose rate, measured continuously", "unit": "µSv/h", "dec": 1, "lo": 0, "hi": 41.7, "min": 0, "max": 60, "step": 15, "range": "below 41.7 µSv/h" }, "ox": { "name": "Oxygen Level", "tag": "Blood oxygen saturation", "unit": "%", "dec": 0, "lo": 95, "hi": 100, "min": 90, "max": 100, "step": 2, "range": "95 – 100 %" }, "act": { "name": "Activity", "tag": "Minutes of exercise per day", "unit": "min", "dec": 0, "lo": 90, "hi": 180, "min": 0, "max": 240, "step": 60, "range": "90 – 180 min per day", "daily": 1 } };
         P.bp.fmt = v => Math.round(v) + "/" + Math.round(v * .66);
         const ORDER = ["hr", "bp", "bs", "bt", "rad", "ox", "sh", "sq", "st", "act"];
         const MISSION_START = Date.UTC(2026, 6, 8);
         const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-        const rng = s => { let a = 0; for (const c of s) a = Math.imul(a ^ c.charCodeAt(0), 16777619); return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } };
-        function mk(key) {
-            const p = P[key], n = p.daily ? 7 : 25, r = rng(key + (p.daily ? 7 : 24)), ph = r() * 6, f = p.daily ? 2 : 1.8;
-            return Array.from({ length: n }, (_, i) => clamp(p.base + p.amp * (Math.sin(i / n * 6.28 * f + ph) * .7 + (r() - .5) * .5), p.min, p.max));
-        }
+
         const S = {};
-        ORDER.forEach(k => { const s = mk(k); S[k] = { s, cur: s[s.length - 1] } });
+        ORDER.forEach(k => { S[k] = { s: [], cur: null }; });
         const fv = (k, v) => { const p = P[k]; return p.fmt ? p.fmt(v) : v.toFixed(p.dec) };
         const stat = (k, v) => { const p = P[k]; return v < p.lo ? ["Low", "low"] : v > p.hi ? ["High", "high"] : ["Normal", "ok"] };
         function spark(k) {
-            const s = S[k].s, mn = Math.min(...s), mx = Math.max(...s), sp = mx - mn || 1;
-            return s.map((v, i) => `${(i / (s.length - 1) * 120).toFixed(1)},${(30 - (v - mn) / sp * 28).toFixed(1)}`).join(" ");
+            const s = S[k].s;
+            if (!s.length) return "";
+            const mn = Math.min(...s), mx = Math.max(...s), sp = mx - mn || 1;
+            return s.map((v, i) => `${(i / Math.max(1, s.length - 1) * 120).toFixed(1)},${(30 - (v - mn) / sp * 28).toFixed(1)}`).join(" ");
         }
-        $("grid").innerHTML = ORDER.map((k, i) => `<a class="tile" id="t-${k}" href="orbital-care-detail.html#${k}" aria-label="${P[k].name}, open details">
+        $("grid").innerHTML = ORDER.map((k, i) => `<a class="tile" id="t-${k}" href="dashboard.html#${k}" aria-label="${P[k].name}, open details">
   <div class="th"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="nm">${P[k].name}</span><span class="s"><i></i><em></em></span></div>
-  <div class="val"><b></b><span>${P[k].unit}</span></div>
+  <div class="val"><b id="${k}"></b><span>${P[k].unit}</span></div>
   <svg class="sp" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"><polyline/></svg><span class="go" aria-hidden="true">→</span></a>`).join("");
         function paint() {
             let bad = 0;
+            let available = 0;
+
             ORDER.forEach(k => {
-                const t = $("t-" + k), [st, cl] = stat(k, S[k].cur); if (cl !== "ok") bad++;
-                t.className = "tile " + cl; t.querySelector("b").textContent = fv(k, S[k].cur);
-                t.querySelector("em").textContent = st; t.querySelector("polyline").setAttribute("points", spark(k));
+                const t = $("t-" + k);
+                const value = S[k].cur;
+                const hasReading = Number.isFinite(value);
+
+                t.className = "tile";
+                t.querySelector("b").textContent = hasReading ? fv(k, value) : "—";
+                t.querySelector("em").textContent = hasReading ? stat(k, value)[0] : "Awaiting data";
+                t.querySelector("polyline").setAttribute("points", spark(k));
+
+                if (hasReading) {
+                    available++;
+                    if (stat(k, value)[1] !== "ok") bad++;
+                    t.classList.add(stat(k, value)[1]);
+                }
             });
-            const col = ["#6fd6a8", "#a8d96b", "#e3d35e", "#e8a24e", "#ee8080"][Math.min(bad, 4)];
-            $("fig").style.setProperty("--b", col); $("cap").textContent = (ORDER.length - bad) + " / " + ORDER.length + " within limits";
-            const el = $("sum"); el.className = "sum"; el.style.setProperty("--c", col);
-            el.innerHTML = `<i></i>${bad ? bad + (bad > 1 ? " readings need" : " reading needs") + " attention" : "All readings normal"}<span>Select a parameter to see details</span>`;
-        }
-        function tick() {
-            ORDER.forEach(k => { const p = P[k], o = S[k]; o.cur = clamp(o.cur + (Math.random() - .5) * p.amp * .35, p.min, p.max); o.s[o.s.length - 1] = o.cur });
-            paint();
+
+            const col = available
+                ? ["#6fd6a8", "#a8d96b", "#e3d35e", "#e8a24e", "#ee8080"][Math.min(bad, 4)]
+                : "#7d879f";
+
+            $("fig").style.setProperty("--b", col);
+            $("cap").textContent = available
+                ? `${ORDER.length - bad} / ${ORDER.length} within limits`
+                : "Awaiting health readings";
+
+            const el = $("sum");
+            el.className = "sum";
+            el.style.setProperty("--c", col);
+            el.innerHTML = available
+                ? `<i></i>${bad ? bad + (bad > 1 ? " readings need" : " reading needs") + " attention" : "All readings normal"}<span>Select a parameter to see details</span>`
+                : `<i></i>Awaiting readings<span>Simulation data not connected</span>`;
         }
         function clock() {
             const d = new Date(); $("day").textContent = "Mission Day " + (Math.floor((d - MISSION_START) / 864e5) + 1);
             $("clock").textContent = d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }) + " · " + d.toISOString().slice(11, 16) + " UTC"
         }
-        setInterval(clock, 1000); clock(); paint(); setInterval(tick, 5000);
+        setInterval(clock, 1000); clock(); paint();
+
     </script>
 </body>
 
