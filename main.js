@@ -114,8 +114,7 @@ subscribe(({ readings }) => {
         document.body.classList.add("radiant-alert")
 
         document.querySelectorAll(".tile").forEach(tile => {
-            // tile.style.backgroundColor = "rgb(49, 6, 6)";
-            document.body.classList.add("radiant-alert-tile")
+            tile.style.backgroundColor = "rgb(49, 6, 6)";
         });
     }
     else if (radiationValue >= 0.3 && radiationValue < 0.5) {
